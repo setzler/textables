@@ -1,0 +1,147 @@
+---
+title: "textables"
+author: Bradley Setzler
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Description
+
+This is a package that helps construct a highly customized LaTeX table in R. The key functions for creating table rows are:
+
+- `row_numeric`: many options to control numerical formatting. 
+    - control decimal places with`dec` argument (e.g., `dec=3` for 3 decimal places);
+    - add parentheses (like standard errors) with `se=T`;
+    - add percentage symbols with `percentage=T`;
+    - add significance stars based on p-values with `pvalues` (e.g., `pvalues=c(0.005,0.05)` would add 3 stars and 2 stars, respectively).
+- `row_string`: simple row of strings.
+- `row_header`: row that spans all columns except the first.
+
+## Example
+
+### 1. Install and load the package
+
+```{r echo=T, eval=T}
+library(textables)
+```
+
+
+### 2. Construct example regression output
+
+```{r echo=T, eval=T}
+
+library(data.table)
+
+dd <- data.table(
+    group = c("Full Sample", "Subsample"), 
+    coef = c(1.2, 3.42),
+    se = c(.6, .481), 
+    p = c(.051, .0), 
+    N = c(1234567, 891011)
+  )
+
+print(dd)
+
+```
+
+### 3. Set up the table columns/alignment
+
+```{r echo=T, eval=T}
+alignments <- "lcc"
+number_columns <- nchar(alignments)
+```
+
+
+### 4. Make a row with group names using `row_string`
+
+```{r echo=T, eval=T}
+group_headers = row_string(" ", dd$group)
+
+print(group_headers)
+```
+
+
+
+### 5. Three ways to use `row_numeric`, controlling decimals
+
+#### 5.1 Make a row with coefficients and stars using `row_numeric`
+
+```{r echo=T, eval=T}
+coefficients = row_numeric("Effect of X on Y", dd$coef, pvalues = dd$p, dec = 3)
+
+print(coefficients)
+```
+
+
+#### 5.2 Make a row with standard errors using `row_numeric`
+
+```{r echo=T, eval=T}
+standard_errors = row_numeric(" ", dd$se, dec = 3, se = T)
+
+print(standard_errors)
+```
+
+
+#### 5.3 Make a row with integers using `row_numeric`
+
+```{r echo=T, eval=T}
+sample_size = row_numeric("Sample Size (1,000)", dd$N / 1000, dec = 0)
+
+print(sample_size)
+```
+Note that commas are added automatically.
+
+### 6. Make a header row to span the columns with `header_row`
+
+```{r echo=T, eval=T}
+header_across_columns = row_header(" ", "Results at the Worker-level", number_columns - 1)
+
+print(header_across_columns)
+```
+
+
+### 7. Put all of the pieces together, separating with mid-rules
+
+
+```{r echo=T, eval=T}
+
+tabular <- c(
+  header_across_columns,
+  group_headers,
+  rule_mid_partial(2, number_columns),
+  coefficients,
+  standard_errors,
+  rule_mid(),
+  sample_size
+)
+
+print(tabular)
+```
+
+
+
+### 8. Add begin/end with pretty rules
+
+
+```{r echo=T, eval=T}
+tabular = tabular_topbottom_pretty(tabular,alignments)
+
+print(tabular)
+```
+
+There is also `tabular_topbottom` that does not add the pretty rules.
+
+
+### 9. Export as .tex file
+
+Use the `stand_alone` option to wrap the table in begin/end document commands so that the table can be compiled directly by LaTeX.
+
+```{r echo=T, eval=T}
+write_tex(tabular,filename='example.tex',stand_alone=T)
+
+system("pdflatex example.tex")
+```
+See example.pdf, which was compiled by this `system` command.

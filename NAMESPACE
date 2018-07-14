@@ -1,0 +1,3 @@
+exportPattern("^[[:alpha:]]+")
+import(data.table)
+import(stringr)
