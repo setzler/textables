@@ -43,7 +43,7 @@ write_tex <- function(tabular,filename,stand_alone=F){
   openfile <- file(filename)
   writeLines(tabular, openfile)
   close(openfile)
-  return(NULL)
+  
 }
 
 

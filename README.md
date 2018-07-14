@@ -5,7 +5,7 @@ Bradley Setzler
 Description
 -----------
 
-This is a package that helps construct a highly customized LaTeX table in R. The key functions for creating table rows are:
+This package allows the construction of highly-customized LaTeX table in R. The key functions for creating table rows are:
 
 -   `row_numeric`: many options to control numerical formatting.
     -   control decimal places with`dec` argument (e.g., `dec=3` for 3 decimal places);
@@ -14,6 +14,19 @@ This is a package that helps construct a highly customized LaTeX table in R. The
     -   add significance stars based on p-values with `pvalues` (e.g., `pvalues=c(0.005,0.05)` would add 3 stars and 2 stars, respectively).
 -   `row_string`: simple row of strings.
 -   `row_header`: row that spans all columns except the first.
+
+It also has convenience functions for inserting rules:
+
+-   `rule_top`: add a top-rule;
+-   `rule_mid`: add a mid-rule;
+-   `rule_bottom`: add a bottom-rule;
+-   `rule_mid_partial`: add a partial mid-rule;
+
+Finally, it can put the rows together into a tabular or a document with these:
+
+-   `tabular_topbottom`: basic tabular environment;
+-   `tabular_topbottom_pretty`: pretty tabular environment using rules;
+-   `write_tex`: save as a tex file. The `stand_alone=T` option makes it a document that can be compiled directly using `system` to call a LaTeX compiler.
 
 Example
 -------
@@ -157,17 +170,13 @@ print(tabular)
 
 There is also `tabular_topbottom` that does not add the pretty rules.
 
-### 9. Export as .tex file
+### 9. Export as .tex file and compile as example.pdf
 
 Use the `stand_alone` option to wrap the table in begin/end document commands so that the table can be compiled directly by LaTeX.
 
 ``` r
 write_tex(tabular,filename='example.tex',stand_alone=T)
-```
 
-    ## NULL
-
-``` r
 system("pdflatex example.tex")
 ```
 
