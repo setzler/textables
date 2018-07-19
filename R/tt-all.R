@@ -8,18 +8,6 @@
 # then we need a bunch of tt_block_* functions to do everything we want.
 # the basic ones that can be used are tt_block_num, tt_block_vnum, tt_block_hnum and same with text.
 
-# tt_cell <- function(value="unkown",cspan=1,make_block=FALSE) {
-#   cell = list(value=round(value,2),nrow=length(value),ncol=length(cspan))
-#   
-#   if (make_block==FALSE) {
-#     class(cell) = list("tt_cell","tt_")
-#   } else {
-#     class(cell) = list("tt_block","tt_")
-#   }
-#   
-#   return(cell)    
-# }
-
 # a block should be a combination of rows, each rows with 
 # a given number of cells. This can be constructed from columns
 tt_block <- function(nrow=0,ncol=0,row_list=list(),row_ending=list(),allow_rbind=TRUE) {
@@ -29,20 +17,20 @@ tt_block <- function(nrow=0,ncol=0,row_list=list(),row_ending=list(),allow_rbind
 }
 
 # a vertical block
-tt_block_vnum <- function(value,round=2) {
+tt_block_vnum <- function(value,...) {
   
   row_list = list()
   row_ending = list()
   for (i in 1:length(value)) {
-    row_list[[i]] = list(paste(round(value[[i]],round)))
+    row_list[[i]] = list(formatNum(value[[i]],...))
     row_ending[[i]] = list("\\\\")
   }
   
   tt_block(length(value),1,row_list, row_ending,TRUE)
 }
 
-tt_block_hnum <- function(value,round=2) {
-  tt_block(1,length(value),list(paste(round(value,round)) ), list(c("\\\\")),TRUE)
+tt_block_hnum <- function(value,...) {
+  tt_block(1,length(value),list( formatNum(value,...)  ), list(c("\\\\")),TRUE)
 }
 
 
@@ -61,10 +49,10 @@ tt_cmidrule <- function(int) {
 }
 
 # creates a text multicolumn
-tt_block_vtext <- function(value=list(),cspan=rep(1,length(value))) {
+tt_block_vtext <- function(value=list(),cspan=rep(1,length(value)),center=rep("c",length(value))) {
   
   I = which(cspan>1)
-  value[I] = sprintf("\\multicolumn{%i}{c}{%s}",cspan[I],value[I]) 
+  value[I] = sprintf("\\multicolumn{%i}{%s}{%s}",cspan[I],center[I],value[I]) 
   
   row_list = list()
   row_list[[1]] = value
@@ -74,6 +62,12 @@ tt_block_vtext <- function(value=list(),cspan=rep(1,length(value))) {
   row_ending[[1]] = ending
   
   tt_block(sum(cspan),1,row_list,row_ending=ending)
+}
+
+tt_mod_vspace <- function(str) {
+  res = list(str=sprintf("\\\\[%s]",str))
+  class(res) = list("tt_mod_ending","tt_")
+  res
 }
 
 # cbind for blocks
@@ -108,6 +102,12 @@ tt_block_vtext <- function(value=list(),cspan=rep(1,length(value))) {
     e1$nrow = e1$nrow + e2$nrow
     return(e1)
   }
+  
+  if ( (class(e1)=="tt_block") && (class(e2)=="tt_mod_ending")) {
+    e1$row_ending[[length(e1$row_ending)]]=e2$str
+    return(e1)
+  }
+  
 }
 
 
