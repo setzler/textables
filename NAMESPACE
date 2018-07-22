@@ -1,5 +1,6 @@
 exportPattern("^[[:alpha:]]+")
 import(data.table)
 import(stringr)
+import(magrittr)
 export("%&%")
 export("+.tt_")

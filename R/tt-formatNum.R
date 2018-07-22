@@ -1,3 +1,5 @@
+
+
 #' Function to do format numbers within LaTeX document.
 #'
 #' @description
@@ -12,7 +14,7 @@
 #' @param se (logical)
 #' @param pvalues (numeric)
 
-formatNum <- function(x, dec = 4, big.mark = ",", percentage = F, se = F, pvalues = -1) {
+tt_formatNum <- function(x, dec = 4, big.mark = ",", percentage = F, se = F, pvalues = -1) {
   if (!is.numeric(x)) {
     stop(sprintf("Input `x` must be numeric but is %s.\n", class(x)))
   }
@@ -31,7 +33,7 @@ formatNum <- function(x, dec = 4, big.mark = ",", percentage = F, se = F, pvalue
   if (!is.numeric(pvalues)) {
     stop(sprintf("Input `pvalues` must be numeric but is %s.\n", class(pvalues)))
   }
-
+  
   x <- round(x, dec)
   y <- trimws(format(x, big.mark = ",", nsmall = dec, digits = dec,
                      scientific = F))
