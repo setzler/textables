@@ -49,7 +49,7 @@ Formatting options:
 - `tt_midrule_partial`: add a partial mid-rule (user must supply begin and end points in a list of vectors, e.g., `tt_midrule_partial = list(c(1,2),c(3,4))`).
 
 
-### Concatenation
+### Concatenation: `+` and `%&%` operators
 
 - `+`: binds columns together horizontally; and,
 - `%&%`: binds rows together vertically.
@@ -57,7 +57,7 @@ Formatting options:
 The output from `tt_numeric_column` and `tt_text_column` can be combined into a single table with `+`, while the output from `tt_numeric_row` and `tt_text_row` could be combined into a single table with `%&%`.
 
 
-### Finishing and Exporting 
+### Finishing and Exporting: `tt_tabularize` and `tt_save`
 
 - `tt_tabularize`: Converts a tt object into a tabular by collapsing into TeX code with begin/end tabular commands; 
 - `tt_save`: save as a .tex file. The `stand_alone=T` option makes it a document that can be compiled directly by LaTeX. The `tabularize_output=T` option runs `tabularize` on the tt object before exporting.

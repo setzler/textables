@@ -21,16 +21,16 @@ Numeric formatting options include:
 -   `percentage`: add a percentage sign to each number with `percentage=TRUE`;
 -   `pvalues`: use p-values to add stars to indicating significance, for example, `pvalues=c(0.005,0.05)` would add 3 stars and 2 stars, respectively.
 
-### Text Columns Rows: `tt_text_*`
+### Text Columns and Rows: `tt_text_*`
 
 The functions for constructing text columns and rows are:
 
 -   `tt_text_column`: a text column (not yet supported); and,
 -   `tt_text_row`: a text row.
 
-Formatting options include:
+Formatting options:
 
--   multicolumn:
+-   `cspan`: allows the text to span multiple columns, for example, `tt_text_row(c("hello","world"), cspan=c(2,3))` will have `hello` span 2 columns and `world` span 3 columns.
 
 ### Rules: `tt_rule_*`
 
@@ -39,14 +39,14 @@ Formatting options include:
 -   `tt_rule_bottom`: add a bottom-rule;
 -   `tt_midrule_partial`: add a partial mid-rule (user must supply begin and end points in a list of vectors, e.g., `tt_midrule_partial = list(c(1,2),c(3,4))`).
 
-### Concatenation
+### Concatenation: `+` and `%&%` operators
 
 -   `+`: binds columns together horizontally; and,
 -   `%&%`: binds rows together vertically.
 
 The output from `tt_numeric_column` and `tt_text_column` can be combined into a single table with `+`, while the output from `tt_numeric_row` and `tt_text_row` could be combined into a single table with `%&%`.
 
-### Finishing and Exporting
+### Finishing and Exporting: `tt_tabularize` and `tt_save`
 
 -   `tt_tabularize`: Converts a tt object into a tabular by collapsing into TeX code with begin/end tabular commands;
 -   `tt_save`: save as a .tex file. The `stand_alone=T` option makes it a document that can be compiled directly by LaTeX. The `tabularize_output=T` option runs `tabularize` on the tt object before exporting.
