@@ -33,10 +33,12 @@ tt_formatNum <- function(x, dec = 4, big.mark = ",", percentage = F, se = F, pva
   if (!is.numeric(pvalues)) {
     stop(sprintf("Input `pvalues` must be numeric but is %s.\n", class(pvalues)))
   }
-  
+
   x <- round(x, dec)
-  y <- trimws(format(x, big.mark = ",", nsmall = dec, digits = dec,
-                     scientific = F))
+  y <- trimws(format(x,
+    big.mark = ",", nsmall = dec, digits = dec,
+    scientific = F
+  ))
   if (sum(percentage) != 0 & sum(percentage) == 1 & length(percentage) == 1) {
     y <- paste0(y, "\\%")
   }

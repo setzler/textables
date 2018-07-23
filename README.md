@@ -17,7 +17,7 @@ It supports building a table in blocks, in the spirit of ggplot2, using the `+` 
 
 Here is an example of the type of table that this package can easily construct:
 
-![example.pdf](example.png)
+![Example Table](inst/example.png)
 
 The package can be installed with the command `devtools::install_github("setzler/textables")`.
 
@@ -119,7 +119,7 @@ print(dd)
 We start by creating a text row indicating whether or not controls are included:
 
 ``` r
-tt = with(dd, tt_text_row(controls)) 
+tt <- with(dd, tt_text_row(controls)) 
 
 print(tt)
 ```
@@ -133,7 +133,7 @@ Note that, when printed to the console, a tt object will automatically include t
 We append to this a row label, add 1pt of space, and follow it with a midrule:
 
 ``` r
-tt = tt_text_row("Controls") %&% tt + tt_spacer_row(1) + tt_rule_mid()
+tt <- tt_text_row("Controls") %&% tt + tt_spacer_row(1) + tt_rule_mid()
 
 print(tt)
 ```
@@ -260,14 +260,15 @@ print(tab)
 We can save the tabular to a .tex file with:
 
 ``` r
-tt_save(tab,filename='example.tex')
+tt_save(tab,filename='inst/example.tex')
 ```
 
 If we want to be able to compile the .tex file directly (rather than treat it as an input in another .tex file), we can use the `stand_alone=TRUE` option, then use R's `system` command to compile to PDF:
 
 ``` r
-tt_save(tab,filename='example.tex',stand_alone=T)
+tt_save(tab,filename='inst/example.tex',stand_alone=T)
 
+setwd("inst")
 system("pdflatex example.tex")
 ```
 

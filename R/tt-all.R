@@ -25,7 +25,7 @@ tt_numeric_column <- function(value, ...) {
     row_list[[i]] <- list(tt_formatNum(value[[i]], ...))
     row_ending[[i]] <- list("\\\\")
   }
-  
+
   tt_block(length(value), 1, row_list, row_ending, TRUE)
 }
 
@@ -63,21 +63,26 @@ tt_rule_mid_partial <- function(int) {
   tt_block(1, 1, list(c(str)), list(c("")), FALSE)
 }
 
+
+
 # creates a text row, with multicolumn support
 #' @export
 tt_text_row <- function(value = list(), cspan = rep(1, length(value)), center = rep("c", length(value))) {
   I <- which(cspan > 1)
   value[I] <- sprintf("\\multicolumn{%i}{%s}{%s}", cspan[I], center[I], value[I])
-  
+
   row_list <- list()
   row_list[[1]] <- value
-  
+
   ending <- list(rep("\\\\", length(row_list)))
   row_ending <- list()
   row_ending[[1]] <- ending
-  
+
   tt_block(sum(cspan), 1, row_list, row_ending = ending)
 }
+
+
+
 
 # adds vertical space between rows
 #' @export
@@ -87,16 +92,18 @@ tt_spacer_row <- function(str) {
   res
 }
 
+
+
 # cbind for blocks
 `%&%` <- function(e1, e2, ...) {
   # if we are given 2 cells
   if ((class(e1) == "tt_block") && (class(e2) == "tt_block")) {
     # cat("block & block\n")
-    
+
     # @fixme, check that number of row matches
-    
+
     block <- tt_block()
-    
+
     # merge the cells row by row
     for (i in 1:e1$nrow) {
       block$row_list[[i]] <- c(e1$row_list[[i]], e2$row_list[[i]])
@@ -119,7 +126,7 @@ tt_spacer_row <- function(str) {
     e1$nrow <- e1$nrow + e2$nrow
     return(e1)
   }
-  
+
   if ((class(e1) == "tt_block") && (class(e2) == "tt_mod_ending")) {
     e1$row_ending[[length(e1$row_ending)]] <- e2$str
     return(e1)
@@ -129,30 +136,29 @@ tt_spacer_row <- function(str) {
 
 
 
-#' Convert the textable object to LaTeX tabular.
+#' Convert the textable object to a LaTeX tabular.
 #' @export
-tt_tabularize <- function(tt, header = rep("r", tt$ncol ), 
+tt_tabularize <- function(tt, header = rep("r", tt$ncol),
                           pretty_rules = F, left_align_first = F) {
-  
   if (pretty_rules) {
     tt <- tt_rule_top() + tt_rule_mid() + tt + tt_rule_mid() + tt_rule_bottom()
   }
-  
+
   if (left_align_first) {
     header <- c("l", rep("r", tt$ncol - 1))
   }
-  
+
   tabular <- sprintf("\\begin{tabular}{%s}", paste(header, collapse = ""))
-  
+
   for (i in 1:length(tt$row_list)) {
     tabular <- c(
       tabular,
       paste(paste(tt$row_list[[i]], collapse = " & "), tt$row_ending[[i]])
     )
   }
-  
+
   tabular <- c(tabular, "\\end{tabular}")
-  
+
   return(tabular)
 }
 
@@ -172,7 +178,7 @@ tt_save <- function(tabular, filename, stand_alone = F) {
       "\\usepackage{graphicx}",
       "\\usepackage[margin=1in]{geometry}",
       "\\begin{document}",
-      tabular, 
+      tabular,
       "\\end{document}"
     )
   }
@@ -181,33 +187,3 @@ tt_save <- function(tabular, filename, stand_alone = F) {
   close(openfile)
 }
 
-
-
-## tt_row_vspace(2) should change the ending of the last row
-
-# testing
-test.latble <- function() {
-  
-  # ------ simple constructions and combinations ----- #
-  rr <- tt_numeric_row(1:10)
-  rr <- tt_numeric_column(1:10)
-  rr <- tt_numeric_column(1:10) %&% tt_numeric_column(1:10)
-  rr <- tt_numeric_column(1:10) %&% tt_numeric_column(1:10) %&% tt_numeric_column(1:10)
-  rr <- tt_numeric_row(1:10) + tt_numeric_row(1:10) + tt_numeric_row(1:10)
-  
-  
-  # ----- example with a data.table -------- #
-  # exmaple which uses data and grouped columns
-  require(data.table)
-  data <- data.table(v1 = rnorm(5), v2 = rnorm(5), v3 = rnorm(5), v4 = rnorm(5))
-  
-  tt <-
-    tt_text_row(c("G1", "G2"), c(2, 2)) +
-    tt_text_row(c("v1", "v2", "v3", "v2+v3")) +
-    tt_rule_mid_partial(list(c(1, 2), c(3, 4))) +
-    with(data[1:2], (tt_numeric_column(v1) %&% tt_numeric_column(v2) %&% tt_numeric_column(v3)) %&% tt_numeric_column(v2 + v3)) +
-    tt_rule_mid() +
-    with(data[3:5], (tt_numeric_column(v1) %&% tt_numeric_column(v2) %&% tt_numeric_column(v3)) %&% tt_numeric_column(v2 + v3))
-  
-  print(tt)
-}

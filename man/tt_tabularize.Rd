@@ -2,11 +2,11 @@
 % Please edit documentation in R/tt-all.R
 \name{tt_tabularize}
 \alias{tt_tabularize}
-\title{Convert the textable object to LaTeX tabular.}
+\title{Convert the textable object to a LaTeX tabular.}
 \usage{
 tt_tabularize(tt, header = rep("r", tt$ncol), pretty_rules = F,
   left_align_first = F)
 }
 \description{
-Convert the textable object to LaTeX tabular.
+Convert the textable object to a LaTeX tabular.
 }
