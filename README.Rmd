@@ -68,8 +68,8 @@ The functions for constructing text columns and rows are:
 
 ### Concatenation: `+` and `%&%` operators
 
-- `+`: binds columns together horizontally; and,
-- `%&%`: binds rows together vertically.
+- `+`: binds rows together vertically; and,
+- `%&%`: binds columns together horizontally.
 
 The output from `tt_numeric_column` and `tt_text_column` can be combined into a single table with `+`, while the output from `tt_numeric_row` and `tt_text_row` could be combined into a single table with `%&%`.
 
