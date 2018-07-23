@@ -159,7 +159,8 @@ print(tt)
 We create a row of coefficient estimates with stars indicating significance and rounding to the third decimal place:
 
 ```{r echo=T, eval=T}
-tt = tt +  tt_text_row("Coefficient ($\\tilde{\\beta}_\\nu$)") %&% with(dd, tt_numeric_row(coef, pvalues=pvals, dec=2))
+tt = tt +  tt_text_row("Coefficient ($\\tilde{\\beta}_\\nu$)") %&% 
+      with(dd, tt_numeric_row(coef, pvalues=pvals, dec=2))
 
 print(tt)
 ```
@@ -167,15 +168,16 @@ print(tt)
 We add to this a row of standard errors:
 
 ```{r echo=T, eval=T}
-tt = tt +  tt_text_row("Std. Error") %&% with(dd, tt_numeric_row(SEs, se=T, dec=2))
+tt = tt +  tt_text_row("Std. Error") %&% 
+      with(dd, tt_numeric_row(SEs, se=T, dec=2))
 
-print(tt)
 ```
 
 Finally, we add a row of sample size integers (note the automatic commas, which can be disabled with `big.mark=""`). We separate the sample size with a midrule:
 
 ```{r echo=T, eval=T}
-tt = tt + tt_rule_mid() + tt_text_row("Sample Size") %&% with(dd, tt_numeric_row(unique(N), cspan=c(2,2), dec=0))
+tt <- tt + tt_rule_mid() + tt_text_row("Sample Size") %&% 
+      with(dd, tt_numeric_row(unique(N), cspan=c(2,2), dec=0))
 
 print(tt)
 ```
@@ -185,37 +187,20 @@ print(tt)
 
 ### 5. Finishing and saving
 
-We convert the tt object into a LaTeX tabular as follows:
+We convert the tt object into a LaTeX tabular using `tt_tabularize`. We can make the tabular prettier with top and bottom rules with the `pretty_rules=T` option:
 
 ```{r echo=T, eval=T}
-tab = tt_tabularize(tt, header=c("l",rep("r",4)))
+tab <- tt_tabularize(tt, header=c("l",rep("r",4)), pretty_rules=T)
 
 print(tab)
 ```
 
-We can make the tabular prettier (top and bottom rules) as follows:
-
-```{r echo=T, eval=T}
-tab = tt_tabularize(tt, header=c("l",rep("r",4)), pretty_rules=T)
-
-print(tab)
-```
-
-We can save the tabular to a .tex file with:
-
-```{r echo=T, eval=T}
-
-tt_save(tab,filename='inst/example.tex')
-
-```
-
-If we want to be able to compile the .tex file directly (rather than treat it as an input in another .tex file), we can use the `stand_alone=TRUE` option, then use R's `system` command to compile to PDF:
+We can use `tt_save` to save the tabular to a .tex file. If we want to be able to compile the .tex file directly, we can use the `stand_alone=TRUE` option, then use R's `system` command to compile to PDF:
 
 
 ```{r echo=T, eval=T}
-tt_save(tab,filename='inst/example.tex',stand_alone=T)
-
 setwd("inst")
+tt_save(tab,filename='example.tex',stand_alone=T)
 system("pdflatex example.tex")
 
 ```

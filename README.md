@@ -160,7 +160,8 @@ print(tt)
 We create a row of coefficient estimates with stars indicating significance and rounding to the third decimal place:
 
 ``` r
-tt = tt +  tt_text_row("Coefficient ($\\tilde{\\beta}_\\nu$)") %&% with(dd, tt_numeric_row(coef, pvalues=pvals, dec=2))
+tt = tt +  tt_text_row("Coefficient ($\\tilde{\\beta}_\\nu$)") %&% 
+      with(dd, tt_numeric_row(coef, pvalues=pvals, dec=2))
 
 print(tt)
 ```
@@ -176,24 +177,15 @@ print(tt)
 We add to this a row of standard errors:
 
 ``` r
-tt = tt +  tt_text_row("Std. Error") %&% with(dd, tt_numeric_row(SEs, se=T, dec=2))
-
-print(tt)
+tt = tt +  tt_text_row("Std. Error") %&% 
+      with(dd, tt_numeric_row(SEs, se=T, dec=2))
 ```
-
-    ## \begin{tabular}{rr}
-    ##   & \multicolumn{2}{c}{Full Sample} & \multicolumn{2}{c}{Subsample} \\
-    ##  \cmidrule(lr){2-3} \cmidrule(lr){4-5} 
-    ## Controls & No & Yes & No & Yes \\[1.000000pt]
-    ## \midrule 
-    ## Coefficient ($\tilde{\beta}_\nu$) & 1.17* & 1.59*** & 1.10 & 1.69* \\
-    ## Std. Error & (0.60) & (0.48) & (0.79) & (0.80) \\
-    ## \end{tabular}
 
 Finally, we add a row of sample size integers (note the automatic commas, which can be disabled with `big.mark=""`). We separate the sample size with a midrule:
 
 ``` r
-tt = tt + tt_rule_mid() + tt_text_row("Sample Size") %&% with(dd, tt_numeric_row(unique(N), cspan=c(2,2), dec=0))
+tt <- tt + tt_rule_mid() + tt_text_row("Sample Size") %&% 
+      with(dd, tt_numeric_row(unique(N), cspan=c(2,2), dec=0))
 
 print(tt)
 ```
@@ -211,29 +203,10 @@ print(tt)
 
 ### 5. Finishing and saving
 
-We convert the tt object into a LaTeX tabular as follows:
+We convert the tt object into a LaTeX tabular using `tt_tabularize`. We can make the tabular prettier with top and bottom rules with the `pretty_rules=T` option:
 
 ``` r
-tab = tt_tabularize(tt, header=c("l",rep("r",4)))
-
-print(tab)
-```
-
-    ##  [1] "\\begin{tabular}{lrrrr}"                                                         
-    ##  [2] "  & \\multicolumn{2}{c}{Full Sample} & \\multicolumn{2}{c}{Subsample} \\\\"      
-    ##  [3] " \\cmidrule(lr){2-3} \\cmidrule(lr){4-5} "                                       
-    ##  [4] "Controls & No & Yes & No & Yes \\\\[1.000000pt]"                                 
-    ##  [5] "\\midrule "                                                                      
-    ##  [6] "Coefficient ($\\tilde{\\beta}_\\nu$) & 1.17* & 1.59*** & 1.10 & 1.69* \\\\"      
-    ##  [7] "Std. Error & (0.60) & (0.48) & (0.79) & (0.80) \\\\"                             
-    ##  [8] "\\midrule "                                                                      
-    ##  [9] "Sample Size & \\multicolumn{2}{c}{1,234,567} & \\multicolumn{2}{c}{891,011} \\\\"
-    ## [10] "\\end{tabular}"
-
-We can make the tabular prettier (top and bottom rules) as follows:
-
-``` r
-tab = tt_tabularize(tt, header=c("l",rep("r",4)), pretty_rules=T)
+tab <- tt_tabularize(tt, header=c("l",rep("r",4)), pretty_rules=T)
 
 print(tab)
 ```
@@ -253,18 +226,11 @@ print(tab)
     ## [13] "\\bottomrule "                                                                   
     ## [14] "\\end{tabular}"
 
-We can save the tabular to a .tex file with:
+We can use `tt_save` to save the tabular to a .tex file. If we want to be able to compile the .tex file directly, we can use the `stand_alone=TRUE` option, then use R's `system` command to compile to PDF:
 
 ``` r
-tt_save(tab,filename='inst/example.tex')
-```
-
-If we want to be able to compile the .tex file directly (rather than treat it as an input in another .tex file), we can use the `stand_alone=TRUE` option, then use R's `system` command to compile to PDF:
-
-``` r
-tt_save(tab,filename='inst/example.tex',stand_alone=T)
-
 setwd("inst")
+tt_save(tab,filename='example.tex',stand_alone=T)
 system("pdflatex example.tex")
 ```
 
