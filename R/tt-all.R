@@ -16,6 +16,27 @@ tt_block <- function(nrow = 0, ncol = 0, row_list = list(), row_ending = list(),
   return(block)
 }
 
+
+# Creates a numeric row
+#' @export
+tt_numeric_row <- function(value, cspan = rep(1, length(value)), center = rep("c", length(value)), ...) {
+  
+  value = tt_formatNum(value, ...)
+  
+  I <- which(cspan > 1)
+  value[I] <- sprintf("\\multicolumn{%i}{%s}{%s}", cspan[I], center[I], value[I])
+  
+  row_list <- list()
+  row_list[[1]] <- value
+  
+  ending <- list(rep("\\\\", length(row_list)))
+  row_ending <- list()
+  row_ending[[1]] <- ending
+  
+  tt_block(sum(cspan), 1, row_list, row_ending = ending)
+}
+
+
 # Creates a numeric column
 #' @export
 tt_numeric_column <- function(value, ...) {
@@ -25,15 +46,43 @@ tt_numeric_column <- function(value, ...) {
     row_list[[i]] <- list(tt_formatNum(value[[i]], ...))
     row_ending[[i]] <- list("\\\\")
   }
-
+  
   tt_block(length(value), 1, row_list, row_ending, TRUE)
 }
 
-# Creates a numeric row
+
+# creates a text row, with multicolumn support
 #' @export
-tt_numeric_row <- function(value, ...) {
-  tt_block(1, length(value), list(tt_formatNum(value, ...)), list(c("\\\\")), TRUE)
+tt_text_row <- function(value = list(), cspan = rep(1, length(value)), center = rep("c", length(value))) {
+  I <- which(cspan > 1)
+  value[I] <- sprintf("\\multicolumn{%i}{%s}{%s}", cspan[I], center[I], value[I])
+
+  row_list <- list()
+  row_list[[1]] <- value
+
+  ending <- list(rep("\\\\", length(row_list)))
+  row_ending <- list()
+  row_ending[[1]] <- ending
+
+  tt_block(sum(cspan), 1, row_list, row_ending = ending)
 }
+
+
+
+# Creates a text column
+#' @export
+tt_text_column <- function(value) {
+  row_list <- list()
+  row_ending <- list()
+  for (i in 1:length(value)) {
+    row_list[[i]] <- list(value[[i]])
+    row_ending[[i]] <- list("\\\\")
+  }
+  
+  tt_block(length(value), 1, row_list, row_ending, TRUE)
+}
+
+
 
 # creates a top rule
 #' @export
@@ -62,27 +111,6 @@ tt_rule_mid_partial <- function(int) {
   }
   tt_block(1, 1, list(c(str)), list(c("")), FALSE)
 }
-
-
-
-# creates a text row, with multicolumn support
-#' @export
-tt_text_row <- function(value = list(), cspan = rep(1, length(value)), center = rep("c", length(value))) {
-  I <- which(cspan > 1)
-  value[I] <- sprintf("\\multicolumn{%i}{%s}{%s}", cspan[I], center[I], value[I])
-
-  row_list <- list()
-  row_list[[1]] <- value
-
-  ending <- list(rep("\\\\", length(row_list)))
-  row_ending <- list()
-  row_ending[[1]] <- ending
-
-  tt_block(sum(cspan), 1, row_list, row_ending = ending)
-}
-
-
-
 
 # adds vertical space between rows
 #' @export

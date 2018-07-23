@@ -3,7 +3,7 @@ textables: Customized LaTeX tables in R
 Created by Thibaut Lamadon and Bradley Setzler, University of Chicago
 
 Overview
-========
+--------
 
 This package produces highly-customized LaTeX tables in R. The broad organization of functions is as follows:
 
@@ -22,14 +22,14 @@ Here is an example of the type of table that this package can easily construct:
 The package can be installed with the command `devtools::install_github("setzler/textables")`.
 
 Details
-=======
+-------
 
 ### Numeric Columns and Rows: `tt_numeric_*`
 
 The functions for constructing numeric columns and rows are as follows:
 
 -   `tt_numeric_column`: a numeric column; and,
--   `tt_numeric_row`: a numeric row.
+-   `tt_numeric_row`: a numeric row, with argument `cspan` that allows the numbers to span multiple columns.
 
 Numeric formatting options include:
 
@@ -42,12 +42,8 @@ Numeric formatting options include:
 
 The functions for constructing text columns and rows are:
 
--   `tt_text_column`: a text column (not yet supported); and,
--   `tt_text_row`: a text row.
-
-Formatting options:
-
--   `cspan`: allows the text to span multiple columns, for example, `tt_text_row(c("hello","world"), cspan=c(2,3))` will have `hello` span 2 columns and `world` span 3 columns.
+-   `tt_text_column`: a text column.
+-   `tt_text_row`: a text row, with argument `cspan` that allows the text to span multiple columns.
 
 ### Rules: `tt_rule_*`
 
@@ -73,7 +69,7 @@ The output from `tt_numeric_column` and `tt_text_column` can be combined into a 
 -   `tt_save`: save as a .tex file. The `stand_alone=T` option makes it a document that can be compiled directly by LaTeX. The `tabularize_output=T` option runs `tabularize` on the tt object before exporting.
 
 Example
-=======
+-------
 
 This example demonstrates the construction of the example table seen at the beginning of this document.
 
@@ -169,7 +165,7 @@ tt = tt +  tt_text_row("Coefficient ($\\tilde{\\beta}_\\nu$)") %&% with(dd, tt_n
 print(tt)
 ```
 
-    ## \begin{tabular}{rrrrr}
+    ## \begin{tabular}{rr}
     ##   & \multicolumn{2}{c}{Full Sample} & \multicolumn{2}{c}{Subsample} \\
     ##  \cmidrule(lr){2-3} \cmidrule(lr){4-5} 
     ## Controls & No & Yes & No & Yes \\[1.000000pt]
@@ -185,7 +181,7 @@ tt = tt +  tt_text_row("Std. Error") %&% with(dd, tt_numeric_row(SEs, se=T, dec=
 print(tt)
 ```
 
-    ## \begin{tabular}{rrrrr}
+    ## \begin{tabular}{rr}
     ##   & \multicolumn{2}{c}{Full Sample} & \multicolumn{2}{c}{Subsample} \\
     ##  \cmidrule(lr){2-3} \cmidrule(lr){4-5} 
     ## Controls & No & Yes & No & Yes \\[1.000000pt]
@@ -197,12 +193,12 @@ print(tt)
 Finally, we add a row of sample size integers (note the automatic commas, which can be disabled with `big.mark=""`). We separate the sample size with a midrule:
 
 ``` r
-tt = tt + tt_rule_mid() + tt_text_row("Sample Size") %&% with(dd, tt_numeric_row(N, dec=0))
+tt = tt + tt_rule_mid() + tt_text_row("Sample Size") %&% with(dd, tt_numeric_row(unique(N), cspan=c(2,2), dec=0))
 
 print(tt)
 ```
 
-    ## \begin{tabular}{rrrrr}
+    ## \begin{tabular}{rr}
     ##   & \multicolumn{2}{c}{Full Sample} & \multicolumn{2}{c}{Subsample} \\
     ##  \cmidrule(lr){2-3} \cmidrule(lr){4-5} 
     ## Controls & No & Yes & No & Yes \\[1.000000pt]
@@ -210,7 +206,7 @@ print(tt)
     ## Coefficient ($\tilde{\beta}_\nu$) & 1.17* & 1.59*** & 1.10 & 1.69* \\
     ## Std. Error & (0.60) & (0.48) & (0.79) & (0.80) \\
     ## \midrule 
-    ## Sample Size & 1,234,567 & 1,234,567 & 891,011 & 891,011 \\
+    ## Sample Size & \multicolumn{2}{c}{1,234,567} & \multicolumn{2}{c}{891,011} \\
     ## \end{tabular}
 
 ### 5. Finishing and saving
@@ -218,43 +214,43 @@ print(tt)
 We convert the tt object into a LaTeX tabular as follows:
 
 ``` r
-tab = tt_tabularize(tt)
+tab = tt_tabularize(tt, header=c("l",rep("r",4)))
 
 print(tab)
 ```
 
-    ##  [1] "\\begin{tabular}{rrrrr}"                                                   
-    ##  [2] "  & \\multicolumn{2}{c}{Full Sample} & \\multicolumn{2}{c}{Subsample} \\\\"
-    ##  [3] " \\cmidrule(lr){2-3} \\cmidrule(lr){4-5} "                                 
-    ##  [4] "Controls & No & Yes & No & Yes \\\\[1.000000pt]"                           
-    ##  [5] "\\midrule "                                                                
-    ##  [6] "Coefficient ($\\tilde{\\beta}_\\nu$) & 1.17* & 1.59*** & 1.10 & 1.69* \\\\"
-    ##  [7] "Std. Error & (0.60) & (0.48) & (0.79) & (0.80) \\\\"                       
-    ##  [8] "\\midrule "                                                                
-    ##  [9] "Sample Size & 1,234,567 & 1,234,567 & 891,011 & 891,011 \\\\"              
+    ##  [1] "\\begin{tabular}{lrrrr}"                                                         
+    ##  [2] "  & \\multicolumn{2}{c}{Full Sample} & \\multicolumn{2}{c}{Subsample} \\\\"      
+    ##  [3] " \\cmidrule(lr){2-3} \\cmidrule(lr){4-5} "                                       
+    ##  [4] "Controls & No & Yes & No & Yes \\\\[1.000000pt]"                                 
+    ##  [5] "\\midrule "                                                                      
+    ##  [6] "Coefficient ($\\tilde{\\beta}_\\nu$) & 1.17* & 1.59*** & 1.10 & 1.69* \\\\"      
+    ##  [7] "Std. Error & (0.60) & (0.48) & (0.79) & (0.80) \\\\"                             
+    ##  [8] "\\midrule "                                                                      
+    ##  [9] "Sample Size & \\multicolumn{2}{c}{1,234,567} & \\multicolumn{2}{c}{891,011} \\\\"
     ## [10] "\\end{tabular}"
 
-We can make the tabular prettier (top and bottom rules, left-align first column) as follows:
+We can make the tabular prettier (top and bottom rules) as follows:
 
 ``` r
-tab = tt_tabularize(tt, pretty_rules=T, left_align_first=T)
+tab = tt_tabularize(tt, header=c("l",rep("r",4)), pretty_rules=T)
 
 print(tab)
 ```
 
-    ##  [1] "\\begin{tabular}{lrrrr}"                                                   
-    ##  [2] "\\toprule "                                                                
-    ##  [3] "\\midrule "                                                                
-    ##  [4] "  & \\multicolumn{2}{c}{Full Sample} & \\multicolumn{2}{c}{Subsample} \\\\"
-    ##  [5] " \\cmidrule(lr){2-3} \\cmidrule(lr){4-5} "                                 
-    ##  [6] "Controls & No & Yes & No & Yes \\\\[1.000000pt]"                           
-    ##  [7] "\\midrule "                                                                
-    ##  [8] "Coefficient ($\\tilde{\\beta}_\\nu$) & 1.17* & 1.59*** & 1.10 & 1.69* \\\\"
-    ##  [9] "Std. Error & (0.60) & (0.48) & (0.79) & (0.80) \\\\"                       
-    ## [10] "\\midrule "                                                                
-    ## [11] "Sample Size & 1,234,567 & 1,234,567 & 891,011 & 891,011 \\\\"              
-    ## [12] "\\midrule "                                                                
-    ## [13] "\\bottomrule "                                                             
+    ##  [1] "\\begin{tabular}{lrrrr}"                                                         
+    ##  [2] "\\toprule "                                                                      
+    ##  [3] "\\midrule "                                                                      
+    ##  [4] "  & \\multicolumn{2}{c}{Full Sample} & \\multicolumn{2}{c}{Subsample} \\\\"      
+    ##  [5] " \\cmidrule(lr){2-3} \\cmidrule(lr){4-5} "                                       
+    ##  [6] "Controls & No & Yes & No & Yes \\\\[1.000000pt]"                                 
+    ##  [7] "\\midrule "                                                                      
+    ##  [8] "Coefficient ($\\tilde{\\beta}_\\nu$) & 1.17* & 1.59*** & 1.10 & 1.69* \\\\"      
+    ##  [9] "Std. Error & (0.60) & (0.48) & (0.79) & (0.80) \\\\"                             
+    ## [10] "\\midrule "                                                                      
+    ## [11] "Sample Size & \\multicolumn{2}{c}{1,234,567} & \\multicolumn{2}{c}{891,011} \\\\"
+    ## [12] "\\midrule "                                                                      
+    ## [13] "\\bottomrule "                                                                   
     ## [14] "\\end{tabular}"
 
 We can save the tabular to a .tex file with:

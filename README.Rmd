@@ -8,7 +8,7 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Overview
+## Overview
 
 This package produces highly-customized LaTeX tables in R. The broad organization of functions is as follows:
 
@@ -28,14 +28,14 @@ The package can be installed with the command `devtools::install_github("setzler
 
 
 
-# Details
+## Details
 
 ### Numeric Columns and Rows: `tt_numeric_*`
 
 The functions for constructing numeric columns and rows are as follows:
 
 - `tt_numeric_column`: a numeric column; and,
-- `tt_numeric_row`: a numeric row.
+- `tt_numeric_row`: a numeric row, with argument `cspan` that allows the numbers to span multiple columns.
 
 Numeric formatting options include:
 
@@ -49,14 +49,8 @@ Numeric formatting options include:
 
 The functions for constructing text columns and rows are:
 
-- `tt_text_column`: a text column (not yet supported); and,
-- `tt_text_row`: a text row.
-
-Formatting options:
-
-- `cspan`: allows the text to span multiple columns, for example, `tt_text_row(c("hello","world"), cspan=c(2,3))` will have `hello` span 2 columns and `world` span 3 columns.
-
-
+- `tt_text_column`: a text column. 
+- `tt_text_row`: a text row, with argument `cspan` that allows the text to span multiple columns.
 
 
 ### Rules: `tt_rule_*`
@@ -91,7 +85,7 @@ The output from `tt_numeric_column` and `tt_text_column` can be combined into a 
 
 
 
-# Example
+## Example
 
 This example demonstrates the construction of the example table seen at the beginning of this document.
 
@@ -181,7 +175,7 @@ print(tt)
 Finally, we add a row of sample size integers (note the automatic commas, which can be disabled with `big.mark=""`). We separate the sample size with a midrule:
 
 ```{r echo=T, eval=T}
-tt = tt + tt_rule_mid() + tt_text_row("Sample Size") %&% with(dd, tt_numeric_row(N, dec=0))
+tt = tt + tt_rule_mid() + tt_text_row("Sample Size") %&% with(dd, tt_numeric_row(unique(N), cspan=c(2,2), dec=0))
 
 print(tt)
 ```
@@ -194,15 +188,15 @@ print(tt)
 We convert the tt object into a LaTeX tabular as follows:
 
 ```{r echo=T, eval=T}
-tab = tt_tabularize(tt)
+tab = tt_tabularize(tt, header=c("l",rep("r",4)))
 
 print(tab)
 ```
 
-We can make the tabular prettier (top and bottom rules, left-align first column) as follows:
+We can make the tabular prettier (top and bottom rules) as follows:
 
 ```{r echo=T, eval=T}
-tab = tt_tabularize(tt, pretty_rules=T, left_align_first=T)
+tab = tt_tabularize(tt, header=c("l",rep("r",4)), pretty_rules=T)
 
 print(tab)
 ```
