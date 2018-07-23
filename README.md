@@ -160,7 +160,7 @@ print(tt)
 We create a row of coefficient estimates with stars indicating significance and rounding to the third decimal place:
 
 ``` r
-tt = tt +  tt_text_row("Coefficient ($\\tilde{\\beta}_\\nu$)") %&% 
+tt <- tt +  tt_text_row("Coefficient ($\\tilde{\\beta}_\\nu$)") %&% 
       with(dd, tt_numeric_row(coef, pvalues=pvals, dec=2))
 
 print(tt)
@@ -177,7 +177,7 @@ print(tt)
 We add to this a row of standard errors:
 
 ``` r
-tt = tt +  tt_text_row("Std. Error") %&% 
+tt <- tt +  tt_text_row("Std. Error") %&% 
       with(dd, tt_numeric_row(SEs, se=T, dec=2))
 ```
 

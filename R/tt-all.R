@@ -20,19 +20,18 @@ tt_block <- function(nrow = 0, ncol = 0, row_list = list(), row_ending = list(),
 # Creates a numeric row
 #' @export
 tt_numeric_row <- function(value, cspan = rep(1, length(value)), center = rep("c", length(value)), ...) {
-  
-  value = tt_formatNum(value, ...)
-  
+  value <- tt_formatNum(value, ...)
+
   I <- which(cspan > 1)
   value[I] <- sprintf("\\multicolumn{%i}{%s}{%s}", cspan[I], center[I], value[I])
-  
+
   row_list <- list()
   row_list[[1]] <- value
-  
+
   ending <- list(rep("\\\\", length(row_list)))
   row_ending <- list()
   row_ending[[1]] <- ending
-  
+
   tt_block(sum(cspan), 1, row_list, row_ending = ending)
 }
 
@@ -46,7 +45,7 @@ tt_numeric_column <- function(value, ...) {
     row_list[[i]] <- list(tt_formatNum(value[[i]], ...))
     row_ending[[i]] <- list("\\\\")
   }
-  
+
   tt_block(length(value), 1, row_list, row_ending, TRUE)
 }
 
@@ -78,7 +77,7 @@ tt_text_column <- function(value) {
     row_list[[i]] <- list(value[[i]])
     row_ending[[i]] <- list("\\\\")
   }
-  
+
   tt_block(length(value), 1, row_list, row_ending, TRUE)
 }
 
@@ -214,4 +213,3 @@ tt_save <- function(tabular, filename, stand_alone = F) {
   writeLines(tabular, openfile)
   close(openfile)
 }
-
