@@ -16,7 +16,8 @@ tt_block <- function(nrow = 0, ncol = 0, row_list = list(), row_ending = list(),
   return(block)
 }
 
-# a vertical block
+# Creates a numeric column
+#' @export
 tt_numeric_column <- function(value, ...) {
   row_list <- list()
   row_ending <- list()
@@ -28,26 +29,32 @@ tt_numeric_column <- function(value, ...) {
   tt_block(length(value), 1, row_list, row_ending, TRUE)
 }
 
+# Creates a numeric row
+#' @export
 tt_numeric_row <- function(value, ...) {
   tt_block(1, length(value), list(tt_formatNum(value, ...)), list(c("\\\\")), TRUE)
 }
 
 # creates a top rule
+#' @export
 tt_rule_top <- function() {
   tt_block(1, 1, list(c("\\toprule")), list(c("")), FALSE)
 }
 
 # creates a full midrule
+#' @export
 tt_rule_mid <- function() {
   tt_block(1, 1, list(c("\\midrule")), list(c("")), FALSE)
 }
 
 # creates a bottom rule
+#' @export
 tt_rule_bottom <- function() {
   tt_block(1, 1, list(c("\\bottomrule")), list(c("")), FALSE)
 }
 
 # creates one (or many) partial midrule(s)
+#' @export
 tt_rule_mid_partial <- function(int) {
   str <- ""
   for (i in 1:length(int)) {
@@ -56,7 +63,8 @@ tt_rule_mid_partial <- function(int) {
   tt_block(1, 1, list(c(str)), list(c("")), FALSE)
 }
 
-# creates a text multicolumn
+# creates a text row, with multicolumn support
+#' @export
 tt_text_row <- function(value = list(), cspan = rep(1, length(value)), center = rep("c", length(value))) {
   I <- which(cspan > 1)
   value[I] <- sprintf("\\multicolumn{%i}{%s}{%s}", cspan[I], center[I], value[I])
@@ -71,8 +79,10 @@ tt_text_row <- function(value = list(), cspan = rep(1, length(value)), center = 
   tt_block(sum(cspan), 1, row_list, row_ending = ending)
 }
 
-tt_mod_vspace <- function(str) {
-  res <- list(str = sprintf("\\\\[%s]", str))
+# adds vertical space between rows
+#' @export
+tt_spacer_row <- function(str) {
+  res <- list(str = sprintf("\\\\[%fpt]", str))
   class(res) <- list("tt_mod_ending", "tt_")
   res
 }
@@ -119,8 +129,8 @@ tt_mod_vspace <- function(str) {
 
 
 
-
-
+#' Convert the textable object to LaTeX tabular.
+#' @export
 tt_tabularize <- function(tt, header = rep("r", tt$ncol ), 
                           pretty_rules = F, left_align_first = F) {
   
@@ -152,7 +162,8 @@ print.tt_block <- function(tt) {
   cat(paste(tabular, collapse = "\n"))
 }
 
-
+#' Save a textable object to .tex, with stand_alone option
+#' @export
 tt_save <- function(tabular, filename, stand_alone = F) {
   if (stand_alone) {
     tabular <- c(
@@ -172,7 +183,7 @@ tt_save <- function(tabular, filename, stand_alone = F) {
 
 
 
-## tt_row_vspace("2pt") should change the ending of the last row
+## tt_row_vspace(2) should change the ending of the last row
 
 # testing
 test.latble <- function() {

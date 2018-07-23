@@ -1,11 +1,10 @@
 Package: textables
 Type: Package
 Title: Create Customized LaTeX Tables in R
-Version: 0.1.0
-Author: Bradley Setzler
-Maintainer: John Bonney <john.fbonney@gmail.com>
-Description: This is a set of functions that make highly
-    customized LaTeX tables in R. 
+Version: 1.0
+Author: Thibaut Lamadon, Bradley Setzler
+Maintainer: Bradley Setzler <bradley.setzler@gmail.com>
+Description: This package produces highly-customized LaTeX tables in R. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

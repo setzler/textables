@@ -1,11 +1,28 @@
-textables
+textables: Customized LaTeX tables in R
 ================
-Created by Thibaut Lamadon and Bradley Setzler
+Created by Thibaut Lamadon and Bradley Setzler, University of Chicago
 
-Description
-===========
+Overview
+========
 
-This package produces highly-customized LaTeX tables in R.
+This package produces highly-customized LaTeX tables in R. The broad organization of functions is as follows:
+
+-   `tt_numeric_*`: Functions to add numbers to tables;
+-   `tt_text_*`: Functions to add text to tables;
+-   `tt_rule_*`: Functions to add rules to tables;
+-   `tt_spacer_*`: Functions to add spacing to tables;
+-   `tt_tabularize` and `tt_save`: Functions to output the table to LaTeX.
+
+It supports building a table in blocks, in the spirit of ggplot2, using the `+` and `%&%` operators for concatenation.
+
+Here is an example of the type of table that this package can easily construct:
+
+![example.pdf](example.png)
+
+The package can be installed with the command `devtools::install_github("setzler/textables")`.
+
+Details
+=======
 
 ### Numeric Columns and Rows: `tt_numeric_*`
 
@@ -39,6 +56,10 @@ Formatting options:
 -   `tt_rule_bottom`: add a bottom-rule;
 -   `tt_midrule_partial`: add a partial mid-rule (user must supply begin and end points in a list of vectors, e.g., `tt_midrule_partial = list(c(1,2),c(3,4))`).
 
+### Spacers: `tt_spacer_*`
+
+-   `tt_spacer_row`: adds vertical space between rows, for example, `tt_spacer_rows(4.5)` adds 4.5pt of vertical space before the next row begins.
+
 ### Concatenation: `+` and `%&%` operators
 
 -   `+`: binds columns together horizontally; and,
@@ -51,10 +72,16 @@ The output from `tt_numeric_column` and `tt_text_column` can be combined into a 
 -   `tt_tabularize`: Converts a tt object into a tabular by collapsing into TeX code with begin/end tabular commands;
 -   `tt_save`: save as a .tex file. The `stand_alone=T` option makes it a document that can be compiled directly by LaTeX. The `tabularize_output=T` option runs `tabularize` on the tt object before exporting.
 
-Detailed Example
-================
+Example
+=======
+
+This example demonstrates the construction of the example table seen at the beginning of this document.
 
 ### 1. Install and load the package
+
+``` r
+devtools::install_github("setzler/textables")
+```
 
 ``` r
 library(textables)
@@ -87,7 +114,7 @@ print(dd)
     ## 3:   Subsample       No 1.105 0.789 0.160  891011
     ## 4:   Subsample      Yes 1.690 0.800 0.091  891011
 
-### 3. Text rows and rules
+### 3. Text rows, rules, and spacers
 
 We start by creating a text row indicating whether or not controls are included:
 
@@ -103,23 +130,23 @@ print(tt)
 
 Note that, when printed to the console, a tt object will automatically include the begin/end tabular lines as a convenience in case the user wishes to test out the appearance of the table without relying on textable's exporting methods described below.
 
-We append to this a row label and follow it with a midrule:
+We append to this a row label, add 1pt of space, and follow it with a midrule:
 
 ``` r
-tt = tt_text_row("Controls") %&% tt + tt_rule_mid()
+tt = tt_text_row("Controls") %&% tt + tt_spacer_row(1) + tt_rule_mid()
 
 print(tt)
 ```
 
     ## \begin{tabular}{rr}
-    ## Controls & No & Yes & No & Yes \\
+    ## Controls & No & Yes & No & Yes \\[1.000000pt]
     ## \midrule 
     ## \end{tabular}
 
 We add a row above with labels that span multiple columns with matching partial midrules:
 
 ``` r
-tt = tt_text_row(" ") %&% with(dd, tt_text_row(unique(sample), c(2, 2))) + 
+tt = tt_text_row(" ") %&% with(dd, tt_text_row(unique(sample), cspan=c(2, 2))) + 
   tt_rule_mid_partial(list(c(2,3),c(4,5)))  + tt
 
 print(tt)
@@ -128,7 +155,7 @@ print(tt)
     ## \begin{tabular}{rr}
     ##   & \multicolumn{2}{c}{Full Sample} & \multicolumn{2}{c}{Subsample} \\
     ##  \cmidrule(lr){2-3} \cmidrule(lr){4-5} 
-    ## Controls & No & Yes & No & Yes \\
+    ## Controls & No & Yes & No & Yes \\[1.000000pt]
     ## \midrule 
     ## \end{tabular}
 
@@ -145,7 +172,7 @@ print(tt)
     ## \begin{tabular}{rrrrr}
     ##   & \multicolumn{2}{c}{Full Sample} & \multicolumn{2}{c}{Subsample} \\
     ##  \cmidrule(lr){2-3} \cmidrule(lr){4-5} 
-    ## Controls & No & Yes & No & Yes \\
+    ## Controls & No & Yes & No & Yes \\[1.000000pt]
     ## \midrule 
     ## Coefficient ($\tilde{\beta}_\nu$) & 1.17* & 1.59*** & 1.10 & 1.69* \\
     ## \end{tabular}
@@ -161,7 +188,7 @@ print(tt)
     ## \begin{tabular}{rrrrr}
     ##   & \multicolumn{2}{c}{Full Sample} & \multicolumn{2}{c}{Subsample} \\
     ##  \cmidrule(lr){2-3} \cmidrule(lr){4-5} 
-    ## Controls & No & Yes & No & Yes \\
+    ## Controls & No & Yes & No & Yes \\[1.000000pt]
     ## \midrule 
     ## Coefficient ($\tilde{\beta}_\nu$) & 1.17* & 1.59*** & 1.10 & 1.69* \\
     ## Std. Error & (0.60) & (0.48) & (0.79) & (0.80) \\
@@ -178,7 +205,7 @@ print(tt)
     ## \begin{tabular}{rrrrr}
     ##   & \multicolumn{2}{c}{Full Sample} & \multicolumn{2}{c}{Subsample} \\
     ##  \cmidrule(lr){2-3} \cmidrule(lr){4-5} 
-    ## Controls & No & Yes & No & Yes \\
+    ## Controls & No & Yes & No & Yes \\[1.000000pt]
     ## \midrule 
     ## Coefficient ($\tilde{\beta}_\nu$) & 1.17* & 1.59*** & 1.10 & 1.69* \\
     ## Std. Error & (0.60) & (0.48) & (0.79) & (0.80) \\
@@ -199,7 +226,7 @@ print(tab)
     ##  [1] "\\begin{tabular}{rrrrr}"                                                   
     ##  [2] "  & \\multicolumn{2}{c}{Full Sample} & \\multicolumn{2}{c}{Subsample} \\\\"
     ##  [3] " \\cmidrule(lr){2-3} \\cmidrule(lr){4-5} "                                 
-    ##  [4] "Controls & No & Yes & No & Yes \\\\"                                       
+    ##  [4] "Controls & No & Yes & No & Yes \\\\[1.000000pt]"                           
     ##  [5] "\\midrule "                                                                
     ##  [6] "Coefficient ($\\tilde{\\beta}_\\nu$) & 1.17* & 1.59*** & 1.10 & 1.69* \\\\"
     ##  [7] "Std. Error & (0.60) & (0.48) & (0.79) & (0.80) \\\\"                       
@@ -220,7 +247,7 @@ print(tab)
     ##  [3] "\\midrule "                                                                
     ##  [4] "  & \\multicolumn{2}{c}{Full Sample} & \\multicolumn{2}{c}{Subsample} \\\\"
     ##  [5] " \\cmidrule(lr){2-3} \\cmidrule(lr){4-5} "                                 
-    ##  [6] "Controls & No & Yes & No & Yes \\\\"                                       
+    ##  [6] "Controls & No & Yes & No & Yes \\\\[1.000000pt]"                           
     ##  [7] "\\midrule "                                                                
     ##  [8] "Coefficient ($\\tilde{\\beta}_\\nu$) & 1.17* & 1.59*** & 1.10 & 1.69* \\\\"
     ##  [9] "Std. Error & (0.60) & (0.48) & (0.79) & (0.80) \\\\"                       
@@ -244,4 +271,4 @@ tt_save(tab,filename='example.tex',stand_alone=T)
 system("pdflatex example.tex")
 ```
 
-![example.pdf](example.png)
+The resulting table is displayed at the beginning of this document.

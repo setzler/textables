@@ -1,6 +1,6 @@
 ---
-title: "textables"
-author: Created by Thibaut Lamadon and Bradley Setzler
+title: "textables: Customized LaTeX tables in R"
+author: Created by Thibaut Lamadon and Bradley Setzler, University of Chicago
 output: github_document
 ---
 
@@ -8,9 +8,27 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Description
+# Overview
 
-This package produces highly-customized LaTeX tables in R.
+This package produces highly-customized LaTeX tables in R. The broad organization of functions is as follows:
+
+- `tt_numeric_*`: Functions to add numbers to tables;
+- `tt_text_*`: Functions to add text to tables;
+- `tt_rule_*`: Functions to add rules to tables;
+- `tt_spacer_*`: Functions to add spacing to tables;
+- `tt_tabularize` and `tt_save`: Functions to output the table to LaTeX.
+
+It supports building a table in blocks, in the spirit of ggplot2, using the `+` and `%&%` operators for concatenation.
+
+Here is an example of the type of table that this package can easily construct:
+
+![example.pdf](example.png)
+
+The package can be installed with the command `devtools::install_github("setzler/textables")`.
+
+
+
+# Details
 
 ### Numeric Columns and Rows: `tt_numeric_*`
 
@@ -49,6 +67,11 @@ Formatting options:
 - `tt_midrule_partial`: add a partial mid-rule (user must supply begin and end points in a list of vectors, e.g., `tt_midrule_partial = list(c(1,2),c(3,4))`).
 
 
+### Spacers: `tt_spacer_*`
+
+- `tt_spacer_row`: adds vertical space between rows, for example, `tt_spacer_rows(4.5)` adds 4.5pt of vertical space before the next row begins.
+
+
 ### Concatenation: `+` and `%&%` operators
 
 - `+`: binds columns together horizontally; and,
@@ -68,9 +91,15 @@ The output from `tt_numeric_column` and `tt_text_column` can be combined into a 
 
 
 
-# Detailed Example
+# Example
+
+This example demonstrates the construction of the example table seen at the beginning of this document.
 
 ### 1. Install and load the package
+
+```{r echo=T, eval=F}
+devtools::install_github("setzler/textables")
+```
 
 ```{r echo=T, eval=T}
 library(textables)
@@ -98,7 +127,7 @@ print(dd)
 
 
 
-### 3. Text rows and rules
+### 3. Text rows, rules, and spacers
 
 We start by creating a text row indicating whether or not controls are included:
 
@@ -110,10 +139,10 @@ print(tt)
 
 Note that, when printed to the console, a tt object will automatically include the begin/end tabular lines as a convenience in case the user wishes to test out the appearance of the table without relying on textable's exporting methods described below.
 
-We append to this a row label and follow it with a midrule:
+We append to this a row label, add 1pt of space, and follow it with a midrule:
 
 ```{r echo=T, eval=T}
-tt = tt_text_row("Controls") %&% tt + tt_rule_mid()
+tt = tt_text_row("Controls") %&% tt + tt_spacer_row(1) + tt_rule_mid()
 
 print(tt)
 ```
@@ -121,7 +150,7 @@ print(tt)
 We add a row above with labels that span multiple columns with matching partial midrules:
 
 ```{r echo=T, eval=T}
-tt = tt_text_row(" ") %&% with(dd, tt_text_row(unique(sample), c(2, 2))) + 
+tt = tt_text_row(" ") %&% with(dd, tt_text_row(unique(sample), cspan=c(2, 2))) + 
   tt_rule_mid_partial(list(c(2,3),c(4,5)))  + tt
 
 print(tt)
@@ -196,9 +225,6 @@ system("pdflatex example.tex")
 
 ```
 
-![example.pdf](example.png)
-
-
-
+The resulting table is displayed at the beginning of this document.
 
 
