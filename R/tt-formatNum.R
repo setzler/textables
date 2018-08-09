@@ -13,8 +13,9 @@
 #' @param percentage (logical)
 #' @param se (logical)
 #' @param pvalues (numeric)
+#' @param surround (string) allows to surround the results with text, ex "(%s)"
 
-tt_formatNum <- function(x, dec = 4, big.mark = ",", percentage = F, se = F, pvalues = -1) {
+tt_formatNum <- function(x, dec = 4, big.mark = ",", percentage = F, se = F, pvalues = -1,surround="") {
   if (!is.numeric(x)) {
     stop(sprintf("Input `x` must be numeric but is %s.\n", class(x)))
   }
@@ -75,5 +76,10 @@ tt_formatNum <- function(x, dec = 4, big.mark = ",", percentage = F, se = F, pva
     }
   }
   y[grep("NA", y)] <- rep("", 2)
+  
+  if (str_length(surround)>1) {
+    y = sprintf(surround,y)
+  }
+  
   return(y)
 }

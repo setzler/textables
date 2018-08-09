@@ -114,7 +114,7 @@ tt_rule_mid_partial <- function(int) {
 # adds vertical space between rows
 #' @export
 tt_spacer_row <- function(str) {
-  res <- list(str = sprintf("\\\\[%fpt]", str))
+  res <- list(str = sprintf("\\\\[%ipt]", str))
   class(res) <- list("tt_mod_ending", "tt_")
   res
 }
