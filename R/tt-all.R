@@ -16,7 +16,6 @@ tt_block <- function(nrow = 0, ncol = 0, row_list = list(), row_ending = list(),
   return(block)
 }
 
-
 # Creates a numeric row
 #' @export
 tt_numeric_row <- function(value, cspan = rep(1, length(value)), center = rep("c", length(value)), ...) {
@@ -34,7 +33,6 @@ tt_numeric_row <- function(value, cspan = rep(1, length(value)), center = rep("c
 
   tt_block(sum(cspan), 1, row_list, row_ending = ending)
 }
-
 
 # Creates a numeric column
 #' @export
@@ -186,6 +184,9 @@ tt_tabularize <- function(tt, header = rep("r", tt$ncol),
 
   tabular <- c(tabular, "\\end{tabular}")
 
+  # append comment with date of creation
+  tabular <- c( sprintf("%% created using textables on %s",format(Sys.time(), "%a %b %d %X %Y")),tabular) 
+  
   return(tabular)
 }
 
