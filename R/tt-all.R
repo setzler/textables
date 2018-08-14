@@ -120,7 +120,7 @@ tt_spacer_row <- function(str) {
 
 
 # cbind for blocks
-`%&%` <- function(e1, e2, ...) {
+`%:%` <- function(e1, e2, ...) {
   # if we are given 2 cells
   if ((class(e1) == "tt_block") && (class(e2) == "tt_block")) {
     # cat("block & block\n")
@@ -189,6 +189,26 @@ tt_tabularize <- function(tt, header = rep("r", tt$ncol),
   
   return(tabular)
 }
+
+
+#' Shortcut with auto switch for creating rows
+#' @export
+TR <- function(content,...) {
+  
+  input = content
+  # extract first element
+  if (length(input)=="list") {
+    input = content[[1]]
+  }
+  
+  if (typeof(input) %in% c("character")) {
+    return(tt_text_row(content,...))
+  }  else {
+    return(tt_numeric_row(content,...))
+  }
+
+}
+
 
 
 print.tt_block <- function(tt) {
