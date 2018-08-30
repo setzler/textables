@@ -1,5 +1,6 @@
 exportPattern("^[[:alpha:]]+")
 import(data.table)
+import(checkmate)
 import(stringr)
 import(magrittr)
 export("%:%")

@@ -224,6 +224,7 @@ tt_save <- function(tabular, filename, stand_alone = F) {
       "\\documentclass{standalone}",
       "\\usepackage{booktabs}",
       "\\usepackage{graphicx}",
+      "\\usepackage{multirow}",
       "\\usepackage[margin=1in]{geometry}",
       "\\begin{document}",
       tabular,

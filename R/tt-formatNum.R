@@ -14,68 +14,66 @@
 #' @param se (logical)
 #' @param pvalues (numeric)
 #' @param surround (string) allows to surround the results with text, ex "(%s)"
-
-tt_formatNum <- function(x, dec = 4, big.mark = ",", percentage = F, se = F, pvalues = -1,surround="") {
-  if (!is.numeric(x)) {
-    stop(sprintf("Input `x` must be numeric but is %s.\n", class(x)))
+#' @export
+tt_formatNum <- function(x, dec = 4, big.mark = ",", percentage = F, se = F, pvalues = NULL, surround="") {
+  
+  # check types
+  assertNumeric(x)
+  assertNumeric(dec)
+  if(!is.null(pvalues)){
+    assertNumeric(pvalues,len=length(x),lower=0,upper=1)
   }
-  if (!is.numeric(dec)) {
-    stop(sprintf("Input `dec` must be numeric but is %s.\n", class(dec)))
+  assertLogical(percentage)
+  assertLogical(se)
+  assertCharacter(big.mark,len=1)
+  
+  # account for length
+  if(length(dec)>1){
+    assert(length(x)==length(dec))
+  } else {
+    dec <- rep(dec,length(x))
   }
-  if (!is.character(big.mark)) {
-    stop(sprintf("Input `big.mark` must be character but is %s. \n", class(big.mark)))
+  
+  if(length(percentage)>1){
+    assert(length(x)==length(percentage))
+  } else {
+    percentage <- rep(percentage, length(x))
   }
-  if (!is.logical(percentage)) {
-    stop(sprintf("Input `percentage` must be logical but is %s.\n", class(percentage)))
+  
+  if(length(se)>1){
+    assert(length(x)==length(se))
+  } else {
+    se <- rep(se, length(x))
   }
-  if (!is.logical(se)) {
-    stop(sprintf("Input `se` must be logical but is %s.\n", class(se)))
-  }
-  if (!is.numeric(pvalues)) {
-    stop(sprintf("Input `pvalues` must be numeric but is %s.\n", class(pvalues)))
-  }
-
-  x <- round(x, dec)
-  y <- trimws(format(x,
-    big.mark = ",", nsmall = dec, digits = dec,
-    scientific = F
-  ))
-  if (sum(percentage) != 0 & sum(percentage) == 1 & length(percentage) == 1) {
-    y <- paste0(y, "\\%")
-  }
-  if (sum(se) != 0 & sum(se) == 1 & length(se) == 1) {
-    y <- paste0("(", y, ")")
-  }
-  if (sum(percentage) != 0 & sum(percentage) >= 1 & length(percentage) == length(x) & length(percentage) > 1) {
-    for (i in 1:length(x)) {
-      if (percentage[i] == 1) {
-        y[i] <- paste0(y[i], "\\%")
+  
+  y <- NULL
+  for(itera in 1:length(x)){
+    if(!is.na(x[itera])){
+      val <- round(x[itera], digits=dec[itera])
+      val <- format(val, big.mark = ",", nsmall = dec[itera], digits = dec[itera], scientific = F )
+      val <- trimws(val)
+      if(percentage[itera]){
+        val <- paste0(val, "\\%")
       }
-    }
-  }
-  if (sum(se) != 0 & sum(se) >= 1 & length(se) == length(x) & length(se) > 1) {
-    for (i in 1:length(x)) {
-      if (se[i] == 1) {
-        y[i] <- paste0("(", y[i], ")")
+      if(se[itera]){
+        val <- paste0("(", val, ")")
       }
-    }
-  }
-  if (length(pvalues) == length(x) & max(pvalues) >= 0 & min(pvalues) <= 1) {
-    for (i in 1:length(x)) {
-      if (!is.na(pvalues[i])) {
-        if (pvalues[i] <= .01) {
-          y[i] <- paste0(y[i], "*")
+      if(!is.null(pvalues)){
+        if (pvalues[itera] <= .01) {
+          val <- paste0(val, "*")
         }
-        if (pvalues[i] <= .05) {
-          y[i] <- paste0(y[i], "*")
+        if (pvalues[itera] <= .05) {
+          val <- paste0(val, "*")
         }
-        if (pvalues[i] <= .1) {
-          y[i] <- paste0(y[i], "*")
+        if (pvalues[itera] <= .1) {
+          val <- paste0(val, "*")
         }
       }
+    } else {
+      val = ""
     }
+    y <- c(y,val)
   }
-  y[grep("NA", y)] <- rep("", 2)
   
   if (str_length(surround)>1) {
     y = sprintf(surround,y)

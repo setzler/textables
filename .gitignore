@@ -1,6 +1,9 @@
 
 .DS_store
 
+# manuals
+man/
+
 # History files
 .Rhistory
 .Rapp.history

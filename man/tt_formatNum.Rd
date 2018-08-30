@@ -5,7 +5,7 @@
 \title{Function to do format numbers within LaTeX document.}
 \usage{
 tt_formatNum(x, dec = 4, big.mark = ",", percentage = F, se = F,
-  pvalues = -1)
+  pvalues = NULL, surround = "")
 }
 \arguments{
 \item{x}{The number(s) to be formatted (numeric).}
@@ -20,6 +20,8 @@ a comma (as in 1,201,390) (character).}
 \item{se}{(logical)}
 
 \item{pvalues}{(numeric)}
+
+\item{surround}{(string) allows to surround the results with text, ex "(%s)"}
 }
 \description{
 This function formats numbers in a table within a
