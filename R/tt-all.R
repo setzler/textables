@@ -226,6 +226,7 @@ tt_save <- function(tabular, filename, stand_alone = F) {
       "\\usepackage{graphicx}",
       "\\usepackage{multirow}",
       "\\usepackage{amssymb}",
+      "\\usepackage{amsmath}",
       "\\usepackage{pifont}",
       "\\usepackage{xcolor}",
       "\\usepackage[margin=1in]{geometry}",
