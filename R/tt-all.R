@@ -95,7 +95,7 @@ tt_rule_mid <- function() {
 
 # creates a full midrule
 #' @export
-midrule <- function(){
+midrule <- function() {
   tt_rule_mid()
 }
 
@@ -117,7 +117,7 @@ tt_rule_mid_partial <- function(int) {
 
 # creates one (or many) partial midrule(s)
 #' @export
-midrulep <- function(int){
+midrulep <- function(int) {
   tt_rule_mid_partial(int)
 }
 
@@ -132,7 +132,7 @@ tt_spacer_row <- function(str) {
 
 # adds vertical space between rows
 #' @export
-vspace <- function(str){
+vspace <- function(str) {
   return(tt_spacer_row(str))
 }
 
@@ -203,28 +203,26 @@ tt_tabularize <- function(tt, header = rep("r", tt$ncol),
   tabular <- c(tabular, "\\end{tabular}")
 
   # append comment with date of creation
-  tabular <- c( sprintf("%% created using textables on %s",format(Sys.time(), "%a %b %d %X %Y")),tabular) 
-  
+  tabular <- c(sprintf("%% created using textables on %s", format(Sys.time(), "%a %b %d %X %Y")), tabular)
+
   return(tabular)
 }
 
 
 #' Shortcut with auto switch for creating rows
 #' @export
-TR <- function(content,...) {
-  
-  input = content
+TR <- function(content, ...) {
+  input <- content
   # extract first element
-  if (length(input)=="list") {
-    input = content[[1]]
-  }
-  
-  if (typeof(input) %in% c("character")) {
-    return(tt_text_row(content,...))
-  }  else {
-    return(tt_numeric_row(content,...))
+  if (length(input) == "list") {
+    input <- content[[1]]
   }
 
+  if (typeof(input) %in% c("character")) {
+    return(tt_text_row(content, ...))
+  } else {
+    return(tt_numeric_row(content, ...))
+  }
 }
 
 
@@ -260,13 +258,12 @@ tt_save <- function(tabular, filename, stand_alone = F) {
 
 #' Compile a textable object to a pdf file
 #' @export
-TS <- function(tab, file, pretty_rules=T, header, output_path=getwd()){
-  tab <- tt_tabularize(tab, pretty_rules=pretty_rules, header=header)
+TS <- function(tab, file, pretty_rules = T, header, output_path = getwd()) {
+  tab <- tt_tabularize(tab, pretty_rules = pretty_rules, header = header)
   current_wd <- getwd()
   setwd(output_path)
-  filename <- paste0(file,'.tex')
-  tt_save(tab,filename=filename,stand_alone=T)
-  texi2pdf(file=filename, clean = TRUE)
+  filename <- paste0(file, ".tex")
+  tt_save(tab, filename = filename, stand_alone = T)
+  texi2pdf(file = filename, clean = TRUE)
   setwd(current_wd)
 }
-
