@@ -8,99 +8,232 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Overview
+This package produces highly-customized LaTeX tables in R. There are two key functions:
 
-This package produces highly-customized LaTeX tables in R. The broad organization of functions is as follows:
+- `TR`: Form a row in a LaTeX tabular environment.
+- `TS`: Compile a textable object to produce a PDF file of the table.
 
-- `tt_numeric_*`: Functions to add numbers to tables;
-- `tt_text_*`: Functions to add text to tables;
-- `tt_rule_*`: Functions to add rules to tables;
-- `tt_spacer_*`: Functions to add spacing to tables;
-- `tt_tabularize` and `tt_save`: Functions to output the table to LaTeX.
+It supports building a table in blocks, in the spirit of ggplot2, using the `+` and `%:%` operators for concatenation. 
 
-It supports building a table in blocks, in the spirit of ggplot2, using the `+` and `%&%` operators for concatenation.
-
-Here is an example of the type of table that this package can easily construct:
-
-![Example Table](inst/example.png)
-
-The package can be installed with the command `devtools::install_github("setzler/textables")`.
-
-
-
-## Details
-
-### Numeric Columns and Rows: `tt_numeric_*`
-
-The functions for constructing numeric columns and rows are as follows:
-
-- `tt_numeric_column`: a numeric column; and,
-- `tt_numeric_row`: a numeric row, with argument `cspan` that allows the numbers to span multiple columns.
-
-Numeric formatting options include:
-
-- `dec`: control decimal places, for example, `dec=3` displays 3 decimal places;
-- `se`: surround numbers with parenthesis with `se=TRUE`;
-- `percentage`: add a percentage sign to each number with `percentage=TRUE`;
-- `pvalues`: use p-values to add stars to indicating significance, for example, `pvalues=c(0.005,0.05)` would add 3 stars and 2 stars, respectively.
-
-
-### Text Columns and Rows: `tt_text_*`
-
-The functions for constructing text columns and rows are:
-
-- `tt_text_column`: a text column. 
-- `tt_text_row`: a text row, with argument `cspan` that allows the text to span multiple columns.
-
-
-### Rules: `tt_rule_*`
-
-- `tt_rule_top`: add a top-rule;
-- `tt_rule_mid`: add a mid-rule;
-- `tt_rule_bottom`: add a bottom-rule;
-- `tt_midrule_partial`: add a partial mid-rule (user must supply begin and end points in a list of vectors, e.g., `tt_midrule_partial = list(c(1,2),c(3,4))`).
-
-
-### Spacers: `tt_spacer_*`
-
-- `tt_spacer_row`: adds vertical space between rows, for example, `tt_spacer_rows(4.5)` adds 4.5pt of vertical space before the next row begins.
-
-
-### Concatenation: `+` and `%&%` operators
-
-- `+`: binds rows together vertically; and,
-- `%&%`: binds columns together horizontally.
-
-The output from `tt_numeric_column` and `tt_text_column` can be combined into a single table with `+`, while the output from `tt_numeric_row` and `tt_text_row` could be combined into a single table with `%&%`.
-
-
-### Finishing and Exporting: `tt_tabularize` and `tt_save`
-
-- `tt_tabularize`: Converts a tt object into a tabular by collapsing into TeX code with begin/end tabular commands; 
-- `tt_save`: save as a .tex file. The `stand_alone=T` option makes it a document that can be compiled directly by LaTeX. The `tabularize_output=T` option runs `tabularize` on the tt object before exporting.
-
-
-
-
-
-
-
-## Example
-
-This example demonstrates the construction of the example table seen at the beginning of this document.
-
-### 1. Install and load the package
+To install, run:
 
 ```{r echo=T, eval=F}
 devtools::install_github("setzler/textables")
 ```
-
 ```{r echo=T, eval=T}
 library(textables)
 ```
 
 
-### 2. Construct example regression output
+
+Here is an example of the type of table that this package can easily construct:
+
+![Example Table](inst/complex_example.png)
+
+
+
+
+# 1. Character Rows with `TR`
+
+### Purpose
+
+When applied to a character vector, `TR` produces the row of a LaTeX tabular. 
+
+`TR` supports LaTeX math mode, fonts, etc., but requires a double-escape (two back slashes instead of the usual one in LaTeX).
+
+### Example
+
+
+```{r echo=T, eval=T}
+
+vec <- c('Hello','\\textbf{World}','$\\alpha$','$\\frac{1}{2}$')
+
+# produce a LaTeX tabular row
+TR(vec)
+
+```
+
+
+
+
+# 2. Numeric Rows with `TR`
+
+### Purpose
+
+When applied to a numeric vector, `TR` produces the row of a LaTeX tabular. Numeric formatting options include:
+
+- `dec`: control decimal places, for example, `dec=3` displays 3 decimal places;
+- `se`: surround numbers with parenthesis with `se=TRUE`;
+- `percentage`: add a percentage sign to each number with `percentage=TRUE`;
+- `pvalues`: use p-values to add stars to indicating significance, for example, `pvalues=c(0.005,0.05)` would add 3 stars and 2 stars, respectively.
+- `cspan`: column span.
+
+We also provide the `surround` argument for a general syntax to modify values. We could use it to change the font of each number in a row, as shown in the example below.
+
+Note that `dec` can be combined with any other options.
+
+### Examples:
+
+**Decimal places:** `dec`
+```{r echo=T, eval=T}
+
+vec <- c(1.0, 1.01, 1.001)
+
+# round to the 2nd decimal place
+TR(vec, dec=2)
+
+# different rounding for each value
+TR(vec, dec=c(3,2,1))
+
+
+```
+
+**Standard errors:** `se` 
+```{r echo=T, eval=T}
+
+# treat all values as standard errors
+TR(vec, se=T)
+
+# treat some values as standard errors
+TR(vec, dec=c(3,2,1), se=c(T,T,F))
+
+
+```
+
+**Percent symbols:** `percentage`
+```{r echo=T, eval=T}
+
+# treat all values as percentages
+TR(vec, percentage=T)
+
+# treat some values as percentages
+TR(vec, dec=c(3,2,1), percentage=c(T,T,F))
+
+```
+
+
+**Stars for statistical significance:** `pvalues`
+```{r echo=T, eval=T}
+
+
+# add stars by providing p-values
+TR(vec, dec=c(3,2,1), pvalues=c(.01,.05,.1))
+
+
+```
+
+**General modification of each value:** `surround`
+
+```{r echo=T, eval=T}
+
+# turn all numbers red
+TR(vec, surround = "{\\color{red} %s}")
+
+```
+
+
+**Column span:** `cspan`
+```{r echo=T, eval=T}
+
+# span two columns with the middle number
+TR(vec, dec=c(3,2,1), cspan=c(1,2,1))
+
+
+```
+
+
+
+# 3. Concatenation 
+
+### Purpose
+
+- `+`: binds rows together vertically. It allows us to have multiple rows in a tabular.
+- `%:%`: binds columns together horizontally. It allows us to include both character and numeric vectors in the same row.
+
+
+### Examples
+
+
+```{r echo=T, eval=T}
+
+# include character and numeric values in the same row
+tab <- TR("Hello") %:% TR(c(1,2),percentage=T)
+
+# bind with another row
+tab + TR("\\textbf{World}") %:% TR(c(1,2),se=T)
+
+```
+
+
+# 4. Other Formatting Functions
+
+
+### Purpose
+
+- `vspace`: add vertical space between rows.
+- `midrule`: add a horizontal line.
+- `midrulep`: add a partial horizontal line.
+
+
+### Examples
+
+
+**Vertical space:** `vspace`
+```{r echo=T, eval=T}
+
+# bind with another row separated by 3pt vertical space
+tab + vspace(3) + TR("\\textbf{World}") %:% TR(c(1,2),se=T)
+
+```
+
+
+**Horizontal rule:** `midrule`
+```{r echo=T, eval=T}
+
+# bind with another row separated by horizontal line
+tab + midrule() + TR("\\textbf{World}") %:% TR(c(1,2),se=T)
+
+```
+
+
+**Partial horizontal rule(s):** `midrulep`
+```{r echo=T, eval=T}
+
+# bind with another row separated by a partial horizontal line
+tab + midrulep(list(c(2,3))) + TR("\\textbf{World}") %:% TR(c(1,2),se=T)
+
+```
+
+
+
+
+# 5. Export to PDF with `TS`
+
+### Purpose
+
+`TS` calls pdflatex to convert the textables object into a PDF file.
+
+- `file`: name of PDF (must end in `.pdf`)
+- `pretty_rules`: includes double-rules at the top and bottom of the table. Default is `TRUE`.
+- `header`: character vector with alignment of rows. Must be same length as number of rows.
+- `output_path`: Directory path in which to place the PDF. Default is `getwd()`, i.e., the current directory.
+
+### Example
+
+
+**Simple Example:**
+
+```{r echo=T, eval=T}
+
+tab <- TR("hello") %:% TR(0.1)
+
+TS(tab, file="simple_example", pretty_rules=T, header=c('l','c'), output_path=paste0(getwd(),"/inst"))
+
+```
+
+
+
+**Complex Example:**
 
 ```{r echo=T, eval=T}
 
@@ -115,96 +248,23 @@ dd <- data.table(
     N = c(1234567, 1234567, 891011, 891011)
   )
 
-print(dd)
+
+tab <- TR(c("","Full Sample","Subsample"),cspan=c(1,2,2)) +
+  vspace(5) +
+  midrulep(list(c(2,3),c(4,5))) +
+  TR("Controls") %:% with(dd, TR(controls)) +
+  midrule()
+
+tab <- tab +  TR("Coefficient ($\\tilde{\\beta}_\\nu$)") %:% 
+      with(dd, TR(coef, pvalues=pvals, dec=2)) +  
+  TR("Std. Error") %:% with(dd, TR(SEs, se=T, dec=2, surround = "{\\color{blue} %s}"))  + 
+  midrule() + TR("Sample Size") %:% 
+      with(dd, TR(unique(N), cspan=c(2,2), dec=0))
+
+
+TS(tab, file="complex_example", pretty_rules=T, header=c('r',rep('c',4)), output_path=paste0(getwd(),"/inst"))
 
 ```
 
-
-
-### 3. Text rows, rules, and spacers
-
-We start by creating a text row indicating whether or not controls are included:
-
-```{r echo=T, eval=T}
-tt <- with(dd, tt_text_row(controls)) 
-
-print(tt)
-```
-
-Note that, when printed to the console, a tt object will automatically include the begin/end tabular lines as a convenience in case the user wishes to test out the appearance of the table without relying on textable's exporting methods described below.
-
-We append to this a row label, add 1pt of space, and follow it with a midrule:
-
-```{r echo=T, eval=T}
-tt <- tt_text_row("Controls") %&% tt + tt_spacer_row(1) + tt_rule_mid()
-
-print(tt)
-```
-
-We add a row above with labels that span multiple columns with matching partial midrules:
-
-```{r echo=T, eval=T}
-tt = tt_text_row(" ") %&% with(dd, tt_text_row(unique(sample), cspan=c(2, 2))) + 
-  tt_rule_mid_partial(list(c(2,3),c(4,5)))  + tt
-
-print(tt)
-```
-
-
-
-
-
-### 4. Constructing numeric rows
-
-We create a row of coefficient estimates with stars indicating significance and rounding to the third decimal place:
-
-```{r echo=T, eval=T}
-tt <- tt +  tt_text_row("Coefficient ($\\tilde{\\beta}_\\nu$)") %&% 
-      with(dd, tt_numeric_row(coef, pvalues=pvals, dec=2))
-
-print(tt)
-```
-
-We add to this a row of standard errors:
-
-```{r echo=T, eval=T}
-tt <- tt +  tt_text_row("Std. Error") %&% 
-      with(dd, tt_numeric_row(SEs, se=T, dec=2))
-
-```
-
-Finally, we add a row of sample size integers (note the automatic commas, which can be disabled with `big.mark=""`). We separate the sample size with a midrule:
-
-```{r echo=T, eval=T}
-tt <- tt + tt_rule_mid() + tt_text_row("Sample Size") %&% 
-      with(dd, tt_numeric_row(unique(N), cspan=c(2,2), dec=0))
-
-print(tt)
-```
-
-
-
-
-### 5. Finishing and saving
-
-We convert the tt object into a LaTeX tabular using `tt_tabularize`. We can make the tabular prettier with top and bottom rules with the `pretty_rules=T` option:
-
-```{r echo=T, eval=T}
-tab <- tt_tabularize(tt, header=c("l",rep("r",4)), pretty_rules=T)
-
-print(tab)
-```
-
-We can use `tt_save` to save the tabular to a .tex file. If we want to be able to compile the .tex file directly, we can use the `stand_alone=TRUE` option, then use R's `system` command to compile to PDF:
-
-
-```{r echo=T, eval=T}
-setwd("inst")
-tt_save(tab,filename='example.tex',stand_alone=T)
-system("pdflatex example.tex")
-
-```
-
-The resulting table is displayed at the beginning of this document.
-
+The `complex_example` result is shown at the beginning of this document.
 

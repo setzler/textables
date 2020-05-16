@@ -2,20 +2,17 @@
 
 #' Function to do format numbers within LaTeX document.
 #'
-#' @description
-#' This function formats numbers in a table within a
-#'  LaTeX document.
-#'
+#' @description This function formats numbers in a table within a LaTeX document.
 #' @param x The number(s) to be formatted (numeric).
 #' @param dec Number of decimal places (numeric).
-#' @param big.mark Used as mark within large numbers; normally,
-#'  a comma (as in 1,201,390) (character).
+#' @param big.mark Used as mark within large numbers; normally, a comma (as in 1,201,390) (character).
 #' @param percentage (logical)
+#' @param dollar (logical)
 #' @param se (logical)
 #' @param pvalues (numeric)
 #' @param surround (string) allows to surround the results with text, ex "(%s)"
 #' @export
-tt_formatNum <- function(x, dec = 4, big.mark = ",", percentage = F, se = F, pvalues = NULL, surround="") {
+tt_formatNum <- function(x, dec = 4, big.mark = ",", percentage = F, dollar = F, se = F, pvalues = NULL, surround="") {
   
   # check types
   assertNumeric(x)
@@ -24,6 +21,7 @@ tt_formatNum <- function(x, dec = 4, big.mark = ",", percentage = F, se = F, pva
     assertNumeric(pvalues,len=length(x),lower=0,upper=1)
   }
   assertLogical(percentage)
+  assertLogical(dollar)
   assertLogical(se)
   assertCharacter(big.mark,len=1)
   
@@ -40,6 +38,12 @@ tt_formatNum <- function(x, dec = 4, big.mark = ",", percentage = F, se = F, pva
     percentage <- rep(percentage, length(x))
   }
   
+  if(length(dollar)>1){
+    assert(length(x)==length(dollar))
+  } else {
+    dollar <- rep(dollar, length(x))
+  }
+  
   if(length(se)>1){
     assert(length(x)==length(se))
   } else {
@@ -54,6 +58,9 @@ tt_formatNum <- function(x, dec = 4, big.mark = ",", percentage = F, se = F, pva
       val <- trimws(val)
       if(percentage[itera]){
         val <- paste0(val, "\\%")
+      }
+      if(dollar[itera]){
+        val <- paste0("\\$", val)
       }
       if(se[itera]){
         val <- paste0("(", val, ")")

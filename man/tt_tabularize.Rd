@@ -4,8 +4,12 @@
 \alias{tt_tabularize}
 \title{Convert the textable object to a LaTeX tabular.}
 \usage{
-tt_tabularize(tt, header = rep("r", tt$ncol), pretty_rules = F,
-  left_align_first = F)
+tt_tabularize(
+  tt,
+  header = rep("r", tt$ncol),
+  pretty_rules = F,
+  left_align_first = F
+)
 }
 \description{
 Convert the textable object to a LaTeX tabular.

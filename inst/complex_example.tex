@@ -1,0 +1,26 @@
+\documentclass{standalone}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{pifont}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\begin{document}
+% created using textables on Fri May 15 11:24:28 PM 2020
+\begin{tabular}{rcccc}
+\toprule 
+\midrule 
+ & \multicolumn{2}{c}{Full Sample} & \multicolumn{2}{c}{Subsample} \\[5pt]
+ \cmidrule(lr){2-3} \cmidrule(lr){4-5} 
+Controls & No & Yes & No & Yes \\
+\midrule 
+Coefficient ($\tilde{\beta}_\nu$) & 1.17* & 1.59*** & 1.10 & 1.69* \\
+Std. Error & {\color{blue} (0.60)} & {\color{blue} (0.48)} & {\color{blue} (0.79)} & {\color{blue} (0.80)} \\
+\midrule 
+Sample Size & \multicolumn{2}{c}{1,234,567} & \multicolumn{2}{c}{891,011} \\
+\midrule 
+\bottomrule 
+\end{tabular}
+\end{document}

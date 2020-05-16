@@ -93,6 +93,12 @@ tt_rule_mid <- function() {
   tt_block(1, 1, list(c("\\midrule")), list(c("")), FALSE)
 }
 
+# creates a full midrule
+#' @export
+midrule <- function(){
+  tt_rule_mid()
+}
+
 # creates a bottom rule
 #' @export
 tt_rule_bottom <- function() {
@@ -109,6 +115,13 @@ tt_rule_mid_partial <- function(int) {
   tt_block(1, 1, list(c(str)), list(c("")), FALSE)
 }
 
+# creates one (or many) partial midrule(s)
+#' @export
+midrulep <- function(int){
+  tt_rule_mid_partial(int)
+}
+
+
 # adds vertical space between rows
 #' @export
 tt_spacer_row <- function(str) {
@@ -117,6 +130,11 @@ tt_spacer_row <- function(str) {
   res
 }
 
+# adds vertical space between rows
+#' @export
+vspace <- function(str){
+  return(tt_spacer_row(str))
+}
 
 
 # cbind for blocks
@@ -239,3 +257,16 @@ tt_save <- function(tabular, filename, stand_alone = F) {
   writeLines(tabular, openfile)
   close(openfile)
 }
+
+#' Compile a textable object to a pdf file
+#' @export
+TS <- function(tab, file, pretty_rules=T, header, output_path=getwd()){
+  tab <- tt_tabularize(tab, pretty_rules=pretty_rules, header=header)
+  current_wd <- getwd()
+  setwd(output_path)
+  filename <- paste0(file,'.tex')
+  tt_save(tab,filename=filename,stand_alone=T)
+  texi2pdf(file=filename, clean = TRUE)
+  setwd(current_wd)
+}
+

@@ -4,8 +4,16 @@
 \alias{tt_formatNum}
 \title{Function to do format numbers within LaTeX document.}
 \usage{
-tt_formatNum(x, dec = 4, big.mark = ",", percentage = F, se = F,
-  pvalues = NULL, surround = "")
+tt_formatNum(
+  x,
+  dec = 4,
+  big.mark = ",",
+  percentage = F,
+  dollar = F,
+  se = F,
+  pvalues = NULL,
+  surround = ""
+)
 }
 \arguments{
 \item{x}{The number(s) to be formatted (numeric).}
@@ -17,6 +25,8 @@ a comma (as in 1,201,390) (character).}
 
 \item{percentage}{(logical)}
 
+\item{dollar}{(logical)}
+
 \item{se}{(logical)}
 
 \item{pvalues}{(numeric)}
@@ -24,6 +34,5 @@ a comma (as in 1,201,390) (character).}
 \item{surround}{(string) allows to surround the results with text, ex "(%s)"}
 }
 \description{
-This function formats numbers in a table within a
- LaTeX document.
+This function formats numbers in a table within a LaTeX document.
 }
