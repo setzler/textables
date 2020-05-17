@@ -258,7 +258,7 @@ tab <- TR(c("","Full Sample","Subsample"),cspan=c(1,2,2)) +
 tab <- tab +  TR("Coefficient ($\\tilde{\\beta}_\\nu$)") %:% 
       with(dd, TR(coef, pvalues=pvals, dec=2)) +  
   TR("Std. Error") %:% with(dd, TR(SEs, se=T, dec=2, surround = "{\\color{blue} %s}"))  + 
-  midrule() + TR("Sample Size") %:% 
+  midrule() + TR("Sample Size",surround="\\textbf{ %s}") %:% 
       with(dd, TR(unique(N), cspan=c(2,2), dec=0))
 
 

@@ -45,7 +45,7 @@ vec <- c('Hello','\\textbf{World}','$\\alpha$','$\\frac{1}{2}$')
 TR(vec)
 ```
 
-    ## % created using textables on Sat May 16 11:08:47 PM 2020
+    ## % created using textables on Sat May 16 11:14:19 PM 2020
     ## \begin{tabular}{rrrr}
     ## Hello & \textbf{World} & $\alpha$ & $\frac{1}{2}$ \\
     ## \end{tabular}
@@ -84,7 +84,7 @@ vec <- c(1.0, 1.01, 1.001)
 TR(vec, dec=2)
 ```
 
-    ## % created using textables on Sat May 16 11:08:47 PM 2020
+    ## % created using textables on Sat May 16 11:14:19 PM 2020
     ## \begin{tabular}{rrr}
     ## 1.00 & 1.01 & 1.00 \\
     ## \end{tabular}
@@ -94,7 +94,7 @@ TR(vec, dec=2)
 TR(vec, dec=c(3,2,1))
 ```
 
-    ## % created using textables on Sat May 16 11:08:47 PM 2020
+    ## % created using textables on Sat May 16 11:14:19 PM 2020
     ## \begin{tabular}{rrr}
     ## 1.000 & 1.01 & 1.0 \\
     ## \end{tabular}
@@ -106,7 +106,7 @@ TR(vec, dec=c(3,2,1))
 TR(vec, se=T)
 ```
 
-    ## % created using textables on Sat May 16 11:08:47 PM 2020
+    ## % created using textables on Sat May 16 11:14:19 PM 2020
     ## \begin{tabular}{rrr}
     ## (1.0000) & (1.0100) & (1.0010) \\
     ## \end{tabular}
@@ -116,7 +116,7 @@ TR(vec, se=T)
 TR(vec, dec=c(3,2,1), se=c(T,T,F))
 ```
 
-    ## % created using textables on Sat May 16 11:08:47 PM 2020
+    ## % created using textables on Sat May 16 11:14:19 PM 2020
     ## \begin{tabular}{rrr}
     ## (1.000) & (1.01) & 1.0 \\
     ## \end{tabular}
@@ -128,7 +128,7 @@ TR(vec, dec=c(3,2,1), se=c(T,T,F))
 TR(vec, percentage=T)
 ```
 
-    ## % created using textables on Sat May 16 11:08:47 PM 2020
+    ## % created using textables on Sat May 16 11:14:19 PM 2020
     ## \begin{tabular}{rrr}
     ## 1.0000\% & 1.0100\% & 1.0010\% \\
     ## \end{tabular}
@@ -138,7 +138,7 @@ TR(vec, percentage=T)
 TR(vec, dec=c(3,2,1), percentage=c(T,T,F))
 ```
 
-    ## % created using textables on Sat May 16 11:08:47 PM 2020
+    ## % created using textables on Sat May 16 11:14:19 PM 2020
     ## \begin{tabular}{rrr}
     ## 1.000\% & 1.01\% & 1.0 \\
     ## \end{tabular}
@@ -150,7 +150,7 @@ TR(vec, dec=c(3,2,1), percentage=c(T,T,F))
 TR(vec, dec=c(3,2,1), pvalues=c(.01,.05,.1))
 ```
 
-    ## % created using textables on Sat May 16 11:08:47 PM 2020
+    ## % created using textables on Sat May 16 11:14:19 PM 2020
     ## \begin{tabular}{rrr}
     ## 1.000*** & 1.01** & 1.0* \\
     ## \end{tabular}
@@ -162,7 +162,7 @@ TR(vec, dec=c(3,2,1), pvalues=c(.01,.05,.1))
 TR(vec, surround = "{\\color{red} %s}")
 ```
 
-    ## % created using textables on Sat May 16 11:08:47 PM 2020
+    ## % created using textables on Sat May 16 11:14:19 PM 2020
     ## \begin{tabular}{rrr}
     ## {\color{red} 1.0000} & {\color{red} 1.0100} & {\color{red} 1.0010} \\
     ## \end{tabular}
@@ -174,7 +174,7 @@ TR(vec, surround = "{\\color{red} %s}")
 TR(vec, dec=c(3,2,1), cspan=c(1,2,1))
 ```
 
-    ## % created using textables on Sat May 16 11:08:47 PM 2020
+    ## % created using textables on Sat May 16 11:14:19 PM 2020
     ## \begin{tabular}{rrr}
     ## 1.000 & \multicolumn{2}{c}{1.01} & 1.0 \\
     ## \end{tabular}
@@ -198,7 +198,7 @@ tab <- TR("Hello") %:% TR(c(1,2),percentage=T)
 tab + TR("\\textbf{World}") %:% TR(c(1,2),se=T)
 ```
 
-    ## % created using textables on Sat May 16 11:08:47 PM 2020
+    ## % created using textables on Sat May 16 11:14:19 PM 2020
     ## \begin{tabular}{rrr}
     ## Hello & 1.0000\% & 2.0000\% \\
     ## \textbf{World} & (1.0000) & (2.0000) \\
@@ -221,7 +221,7 @@ tab + TR("\\textbf{World}") %:% TR(c(1,2),se=T)
 tab + vspace(3) + TR("\\textbf{World}") %:% TR(c(1,2),se=T)
 ```
 
-    ## % created using textables on Sat May 16 11:08:47 PM 2020
+    ## % created using textables on Sat May 16 11:14:19 PM 2020
     ## \begin{tabular}{rrr}
     ## Hello & 1.0000\% & 2.0000\% \\[3pt]
     ## \textbf{World} & (1.0000) & (2.0000) \\
@@ -234,7 +234,7 @@ tab + vspace(3) + TR("\\textbf{World}") %:% TR(c(1,2),se=T)
 tab + midrule() + TR("\\textbf{World}") %:% TR(c(1,2),se=T)
 ```
 
-    ## % created using textables on Sat May 16 11:08:47 PM 2020
+    ## % created using textables on Sat May 16 11:14:19 PM 2020
     ## \begin{tabular}{rrr}
     ## Hello & 1.0000\% & 2.0000\% \\
     ## \midrule 
@@ -248,7 +248,7 @@ tab + midrule() + TR("\\textbf{World}") %:% TR(c(1,2),se=T)
 tab + midrulep(list(c(2,3))) + TR("\\textbf{World}") %:% TR(c(1,2),se=T)
 ```
 
-    ## % created using textables on Sat May 16 11:08:47 PM 2020
+    ## % created using textables on Sat May 16 11:14:19 PM 2020
     ## \begin{tabular}{rrr}
     ## Hello & 1.0000\% & 2.0000\% \\
     ##  \cmidrule(lr){2-3} 
@@ -303,7 +303,7 @@ tab <- TR(c("","Full Sample","Subsample"),cspan=c(1,2,2)) +
 tab <- tab +  TR("Coefficient ($\\tilde{\\beta}_\\nu$)") %:% 
       with(dd, TR(coef, pvalues=pvals, dec=2)) +  
   TR("Std. Error") %:% with(dd, TR(SEs, se=T, dec=2, surround = "{\\color{blue} %s}"))  + 
-  midrule() + TR("Sample Size") %:% 
+  midrule() + TR("Sample Size",surround="\\textbf{ %s}") %:% 
       with(dd, TR(unique(N), cspan=c(2,2), dec=0))
 
 
