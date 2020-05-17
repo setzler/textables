@@ -2,7 +2,7 @@
 % Please edit documentation in R/tt-formatNum.R
 \name{tt_formatNum}
 \alias{tt_formatNum}
-\title{Function to do format numbers within LaTeX document.}
+\title{This function formats numbers in a table within a LaTeX document.}
 \usage{
 tt_formatNum(
   x,
@@ -20,8 +20,7 @@ tt_formatNum(
 
 \item{dec}{Number of decimal places (numeric).}
 
-\item{big.mark}{Used as mark within large numbers; normally,
-a comma (as in 1,201,390) (character).}
+\item{big.mark}{Used as mark within large numbers; normally, a comma (as in 1,201,390) (character).}
 
 \item{percentage}{(logical)}
 
@@ -31,7 +30,7 @@ a comma (as in 1,201,390) (character).}
 
 \item{pvalues}{(numeric)}
 
-\item{surround}{(string) allows to surround the results with text, ex "(%s)"}
+\item{surround}{(string) allows to surround the results with text}
 }
 \description{
 This function formats numbers in a table within a LaTeX document.

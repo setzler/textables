@@ -1,15 +1,4 @@
-# use %&% for cbind (this might not even be needed)
-# use + for everything else
-# the main object is a block: a grid of cells and a set of line ending rules
-# blocks should have ending rules and on %&% it uses the second one (this seems easy)
-# some blocks can't be used with %&% like midrule (or perhaps only with another midrule)
-# some functions can modify the last ending rule of the previous block tt_row_vspace("2pt")
-#
-# then we need a bunch of tt_block_* functions to do everything we want.
-# the basic ones that can be used are tt_block_num, tt_numeric_column, tt_numeric_row and same with text.
 
-# a block should be a combination of rows, each rows with
-# a given number of cells. This can be constructed from columns
 tt_block <- function(nrow = 0, ncol = 0, row_list = list(), row_ending = list(), allow_rbind = TRUE) {
   block <- list(ncol = ncol, nrow = nrow, row_list = row_list, row_ending = row_ending, allow_rbind = allow_rbind)
   class(block) <- list("tt_block", "tt_")
@@ -31,7 +20,7 @@ tt_numeric_row <- function(value, cspan = rep(1, length(value)), center = rep("c
   row_ending <- list()
   row_ending[[1]] <- ending
 
-  tt_block(sum(cspan), 1, row_list, row_ending = ending)
+  tt_block(sum(cspan), length(cspan), row_list, row_ending = ending)
 }
 
 # Creates a numeric column
@@ -50,7 +39,13 @@ tt_numeric_column <- function(value, ...) {
 
 # creates a text row, with multicolumn support
 #' @export
-tt_text_row <- function(value = list(), cspan = rep(1, length(value)), center = rep("c", length(value))) {
+tt_text_row <- function(value = list(), cspan = rep(1, length(value)), center = rep("c", length(value)), surround = "") {
+  
+  if (str_length(surround) > 1) {
+    value <- sprintf(surround, value)
+  }
+  
+  
   I <- which(cspan > 1)
   value[I] <- sprintf("\\multicolumn{%i}{%s}{%s}", cspan[I], center[I], value[I])
 
@@ -61,7 +56,7 @@ tt_text_row <- function(value = list(), cspan = rep(1, length(value)), center = 
   row_ending <- list()
   row_ending[[1]] <- ending
 
-  tt_block(sum(cspan), 1, row_list, row_ending = ending)
+  tt_block(sum(cspan), length(cspan), row_list, row_ending = ending)
 }
 
 

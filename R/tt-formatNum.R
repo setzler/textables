@@ -1,8 +1,6 @@
 
 
-#' Function to do format numbers within LaTeX document.
-#'
-#' @description This function formats numbers in a table within a LaTeX document.
+#' This function formats numbers in a table within a LaTeX document.
 #' @param x The number(s) to be formatted (numeric).
 #' @param dec Number of decimal places (numeric).
 #' @param big.mark Used as mark within large numbers; normally, a comma (as in 1,201,390) (character).
@@ -10,7 +8,7 @@
 #' @param dollar (logical)
 #' @param se (logical)
 #' @param pvalues (numeric)
-#' @param surround (string) allows to surround the results with text, ex "(%s)"
+#' @param surround (string) allows to surround the results with text
 #' @export
 tt_formatNum <- function(x, dec = 4, big.mark = ",", percentage = F, dollar = F, se = F, pvalues = NULL, surround = "") {
 
