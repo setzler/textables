@@ -172,8 +172,6 @@ vspace <- function(str) {
 }
 
 
-
-
 #' Convert the textable object to a LaTeX tabular.
 #' @export
 tt_tabularize <- function(tt, header = rep("r", tt$ncol),
@@ -226,6 +224,7 @@ print.tt_block <- function(tt) {
   tabular <- tt_tabularize(tt)
   cat(paste(tabular, collapse = "\n"))
 }
+
 
 #' Save a textable object to .tex, with stand_alone option
 #' @export
