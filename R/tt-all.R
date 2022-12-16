@@ -135,17 +135,15 @@ vspace <- function(str) {
 # cbind for blocks
 `%:%` <- function(e1, e2, ...) {
   # if we are given 2 cells
-  if ((class(e1) == "tt_block") && (class(e2) == "tt_block")) {
+  if (("tt_block" %in% class(e1)) && ("tt_block" %in% class(e2))) {
     # cat("block & block\n")
 
     # @fixme, check that number of row matches
 
     block <- tt_block()
 
-    # merge the cells row by row
-    for (i in 1:e1$nrow) {
-      block$row_list[[i]] <- c(e1$row_list[[i]], e2$row_list[[i]])
-    }
+    # merge the cells row by row 
+    block$row_list[[1]] <- c(e1$row_list[[1]], e2$row_list[[1]])  # we used to loop here, unclear why
     block$row_ending <- e2$row_ending # take the right ending
     block$ncol <- e1$ncol + e2$ncol
     block$nrow <- e1$nrow
@@ -155,7 +153,7 @@ vspace <- function(str) {
 
 # rbind for blocks
 `+.tt_` <- function(e1, e2, ...) {
-  if ((class(e1) == "tt_block") && (class(e2) == "tt_block")) {
+  if (("tt_block" %in% class(e1)) && ("tt_block" %in% class(e2))) {
     # cat("block + block\n")
     # we just concat the rows and take the max number of columns
     e1$ncol <- pmax(e1$ncol, e2$ncol)
@@ -165,7 +163,7 @@ vspace <- function(str) {
     return(e1)
   }
 
-  if ((class(e1) == "tt_block") && (class(e2) == "tt_mod_ending")) {
+  if (("tt_block" %in% class(e1)) && ("tt_mod_ending" %in% class(e2))) {
     e1$row_ending[[length(e1$row_ending)]] <- e2$str
     return(e1)
   }

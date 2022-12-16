@@ -52,7 +52,7 @@ tt_formatNum <- function(x, dec = 4, big.mark = ",", percentage = F, dollar = F,
   for (itera in 1:length(x)) {
     if (!is.na(x[itera])) {
       val <- round(x[itera], digits = dec[itera])
-      val <- format(val, big.mark = ",", nsmall = dec[itera], digits = dec[itera], scientific = F)
+      val <- format(val, big.mark = ",", nsmall = dec[itera], scientific = F)
       val <- trimws(val)
       if (percentage[itera]) {
         val <- paste0(val, "\\%")
