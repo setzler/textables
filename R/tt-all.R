@@ -250,16 +250,19 @@ tt_save <- function(tabular, filename, stand_alone = F) {
 
 #' Compile a textable object to a pdf file
 #' @export
-TS <- function(tab, file, pretty_rules = T, header, output_path = getwd(), stand_alone=TRUE) {
+TS <- function(tab, file, header, pretty_rules = T, output_path = getwd(), stand_alone=TRUE, compile_tex=TRUE) {
   tab <- tt_tabularize(tab, pretty_rules = pretty_rules, header = header)
   current_wd <- getwd()
   setwd(output_path)
   filename <- paste0(file, ".tex")
   if(stand_alone){
     tt_save(tab, filename = filename, stand_alone = TRUE)
-    texi2pdf(file = filename, clean = TRUE)
-    file.remove(filename)
+    if(compile_tex){
+      texi2pdf(file = filename, clean = TRUE) 
+    }
   }
-  tt_save(tab, filename = filename, stand_alone = FALSE)
+  if(!stand_alone){
+    tt_save(tab, filename = filename, stand_alone = FALSE)
+  }
   setwd(current_wd)
 }
