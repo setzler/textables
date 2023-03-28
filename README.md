@@ -1,7 +1,7 @@
 
-### Note: This package is now deprecated.
+### Note: There is a newer package available.
 
-While you may continue to use the older `textables` package described below, we have released a newer package: [https://setzler.github.io/textab](https://setzler.github.io/textab/index.html).
+While you may continue to use the older `textables` package described below, we have released a newer package here: [https://setzler.github.io/textab](https://setzler.github.io/textab/index.html).
 
 The newer package is simpler, more capable, better documented, and has been published on CRAN. It can be installed using `install.packages("textab")`.
 
