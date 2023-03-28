@@ -1,3 +1,13 @@
+
+### Note: This package is now deprecated.
+
+While you may continue to use the older `textables` package described below, we have released a newer package: [https://setzler.github.io/textab](https://setzler.github.io/textab/index.html).
+
+The newer package is simpler, more capable, better documented, and has been published on CRAN. It can be installed using `install.packages("textab")`.
+
+
+
+
 textables: Customized LaTeX tables in R
 ================
 Created by Thibaut Lamadon and Bradley Setzler, University of Chicago
